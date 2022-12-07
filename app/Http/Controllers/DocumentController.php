@@ -593,6 +593,8 @@ class DocumentController extends Controller
             return "Retainers Notarized";
         case "REF_SLIP_ANN_MED_DEN_EXAM" :
             return "Referral Slip - Annual Medical and Dental Examination";
+        case "1ST_INDORSEMENT" :
+            return "First Indorsement";
          case "ALL" :
             return "All Documents";
          default:

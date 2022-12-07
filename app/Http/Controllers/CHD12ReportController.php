@@ -855,14 +855,48 @@ class CHD12ReportController extends Controller
     }
     public function top10(Request $req)
     {
+        if($req->daterange)
+        {
+            $daterange = $req->daterange;
+
+            $str = $daterange;
+            $temp1 = explode('-',$str);
+            $temp2 = array_slice($temp1, 0, 1);
+            $tmp = implode(',', $temp2);
+            $start = date('Y-m-d'.' 12:00:00',strtotime($tmp));
         
+            $temp3 = array_slice($temp1, 1, 1);
+            $tmp = implode(',', $temp3);
+            $end = date('Y-m-d'.' 23:59:00',strtotime($tmp));
+
+        }
+        else
+        {
+            $year = date("Y");
+            $start = $year.'-01-01 00:00:00';
+            $end = $year.'-12-31 23:59:59';
+            $daterange = "01/01/$year - 12/31/$year";
+            $str = $daterange;
+        }
+
         if($req->type == 'reported')
         {
             $type = $req->type;
             $year = $req->year;
             $quarter = $req->quarter;
 
-            $top10 = DB::connection('mysql')->select("CALL chd12_top10rep('$year','$quarter')");
+            $top10 = DB::connection('mysql')->select("CALL chd12_top10rep('$start','$end')");
+
+            
+            $from=strtotime($start);
+            $fmonth=date("F",$from);
+            $fyear=date("Y",$from);
+
+            $to=strtotime($end);
+            $tmonth=date("F",$to);
+            $tyear=date("Y",$to);
+
+            $title= $fmonth." - ".$tmonth." $tyear"." Reported Documents";
         }
         elseif($req->type == 'duration')
         {
@@ -870,7 +904,18 @@ class CHD12ReportController extends Controller
             $year = $req->year;
             $quarter = $req->quarter;
 
-            $top10 = DB::connection('mysql')->select("CALL chd12_top10dur('$year','$quarter')");
+            $top10 = DB::connection('mysql')->select("CALL chd12_top10dur('$start','$end')");
+
+            
+            $from=strtotime($start);
+            $fmonth=date("F",$from);
+            $fyear=date("Y",$from);
+
+            $to=strtotime($end);
+            $tmonth=date("F",$to);
+            $tyear=date("Y",$to);
+
+            $title= $fmonth." - ".$tmonth." $tyear"." Lapsed Documents";
         }
         else
         {
@@ -880,40 +925,18 @@ class CHD12ReportController extends Controller
             //Calculate the year quarter.
             $quarter = ceil($month / 3);
 
-            $top10 = DB::connection('mysql')->select("CALL chd12_top10dur('$year','$quarter')");
-        }
+            $top10 = DB::connection('mysql')->select("CALL chd12_top10dur('$start','$end')");
 
-        if($quarter == 1 && $type == 'reported')
-        {
-            $title = 'January - March '.$year.'Reported Documents';
-        }
-        elseif($quarter == 2 && $type == 'reported')
-        {
-            $title = 'April - June '.$year.' Reported Documents';
-        }
-        elseif($quarter == 3 && $type == 'reported')
-        {
-            $title = 'July - September '.$year.' Reported Documents';
-        }
-        elseif($quarter == 4 && $type == 'reported')
-        {
-            $title = 'October - December '.$year.' Reported Documents';
-        }
-        elseif($quarter == 1 && $type == 'duration')
-        {
-            $title = 'January - March '.$year.' Lapsed Documents';
-        }
-        elseif($quarter == 2 && $type == 'duration')
-        {
-            $title = 'April - June '.$year.' Lapsed Documents';
-        }
-        elseif($quarter == 3 && $type == 'duration')
-        {
-            $title = 'July - September '.$year.' Lapsed Documents';
-        }
-        elseif($quarter == 4 && $type == 'duration')
-        {
-            $title = 'October - December '.$year.' Lapsed Documents';
+            
+            $from=strtotime($start);
+            $fmonth=date("F",$from);
+            $fyear=date("Y",$from);
+
+            $to=strtotime($end);
+            $tmonth=date("F",$to);
+            $tyear=date("Y",$to);
+
+            $title= $fmonth." - ".$tmonth." $tyear"." Lapsed Documents";
         }
 
         return view('report.top10',[
@@ -921,6 +944,7 @@ class CHD12ReportController extends Controller
             'title' => $title,
             'quarter' => $quarter,
             'type' => $type,
+            'daterange' => $str,
             'top10' => $top10
         ]);
 
@@ -928,6 +952,30 @@ class CHD12ReportController extends Controller
 
     public function least10(Request $req)
     {
+
+        if($req->daterange)
+        {
+            $daterange = $req->daterange;
+
+            $str = $daterange;
+            $temp1 = explode('-',$str);
+            $temp2 = array_slice($temp1, 0, 1);
+            $tmp = implode(',', $temp2);
+            $start = date('Y-m-d'.' 12:00:00',strtotime($tmp));
+        
+            $temp3 = array_slice($temp1, 1, 1);
+            $tmp = implode(',', $temp3);
+            $end = date('Y-m-d'.' 23:59:00',strtotime($tmp));
+
+        }
+        else
+        {
+            $year = date("Y");
+            $start = $year.'-01-01 00:00:00';
+            $end = $year.'-12-31 23:59:59';
+            $daterange = "01/01/$year - 12/31/$year";
+            $str = $daterange;
+        }
         
         if($req->type == 'reported')
         {
@@ -935,7 +983,7 @@ class CHD12ReportController extends Controller
             $year = $req->year;
             $quarter = $req->quarter;
 
-            $least10 = DB::connection('mysql')->select("CALL chd12_least10rep('$year','$quarter')");
+            $least10 = DB::connection('mysql')->select("CALL chd12_least10rep('$start','$end')");
         }
         elseif($req->type == 'duration')
         {
@@ -943,7 +991,7 @@ class CHD12ReportController extends Controller
             $year = $req->year;
             $quarter = $req->quarter;
 
-            $least10 = DB::connection('mysql')->select("CALL chd12_least10dur('$year','$quarter')");
+            $least10 = DB::connection('mysql')->select("CALL chd12_least10dur('$start','$end')");
         }
         else
         {
@@ -953,12 +1001,13 @@ class CHD12ReportController extends Controller
             //Calculate the year quarter.
             $quarter = ceil($month / 3);
 
-            $least10 = DB::connection('mysql')->select("CALL chd12_least10dur('$year','$quarter')");
+            $least10 = DB::connection('mysql')->select("CALL chd12_least10dur('$start','$end')");
         }
 
         return view('report.least10',[
             'newyear' => $year,
             'quarter' => $quarter,
+            'daterange' => $str,
             'type' => $type,
             'least10' => $least10
         ]);

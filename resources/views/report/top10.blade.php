@@ -68,22 +68,7 @@ font-size:15px;
 
           <div class="form-group">
              <div class="input-group">
-                        <select name="year" id="newyear" class="form-control">
-                        <option value ="">Select...</option>
-                        @for($year=2018;$year<=date('Y');$year++)
-                                <option {{ ($newyear == $year ? 'selected' : '') }}  value="{{ $year }}">{{ $year }}</option>
-                                @endfor
-                        </select>
-                </div>
-                 <div class="input-group" >
-                   <select name="quarter" class="chosen-select-static" style="width:150px">
-                   <option value="0">Select Quarter</option>
-                   <option <?php if($quarter=='1') echo 'selected';?> value="1">1st Quarter</option>
-                   <option <?php if($quarter=='2') echo 'selected';?> value="2">2nd Quarter</option>
-                   <option <?php if($quarter=='3') echo 'selected';?> value="3">3rd Quarter</option>
-                   <option <?php if($quarter=='4') echo 'selected';?> value="4">4th Quarter</option>
-
-                </select>
+             <input type="text" class="form-control" id="reservation" name="daterange" value="@if(isset($daterange)){{ $daterange }}@endif" placeholder="Input date range here..." >
                 </div>
 
                 <div class="input-group" >
