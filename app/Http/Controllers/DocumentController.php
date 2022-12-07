@@ -1336,7 +1336,7 @@ class DocumentController extends Controller
             $keywordLogs = '';
         }
         
-        
+        $user = Session::get('auth');
         $id = Session::get('auth')->id;
         $str = Session::get('range_logsdoc');
         $temp1 = explode('-',$str);
@@ -1353,60 +1353,119 @@ class DocumentController extends Controller
         Session::put('doc_type',self::docTypeName($doc_type));
         Session::put('doc_type_code',$doc_type);
         Session::put('keywordLogs',$keywordLogs);
-        if($doc_type!='ALL'){
-            $data = DB::table('tracking_details')
-                ->select('tracking_master.id as master_id',
-                'tracking_details.id as tracking_id',
-                'tracking_master.route_no',
-                'tracking_details.status',
-                'tracking_master.description',
-                'tracking_details.date_in',
-                'tracking_details.received_by',
-                'tracking_master.doc_type',
-                'tracking_details.delivered_by')
-                ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
-                ->leftJoin('users', 'tracking_details.received_by', '=', 'users.id')
-                ->leftJoin('section', 'users.section', '=', 'section.id')
-                ->where(function($q) use ($keywordLogs){
-                    $q->where('tracking_details.route_no','like',"%$keywordLogs%")
-                        ->orwhere('tracking_master.description','like',"%$keywordLogs%");
-                })
-                ->where('doc_type',$doc_type)
-                ->where('received_by',$id)
-                ->where('date_in','>=',$startdate)
-                ->where('date_in','<=',$enddate)
-                ->orderBy('date_in','desc');
-            $documents = $data->paginate(15);
-            $logs = $data->get();
-            
-        }else{
-            $data = DB::table('tracking_details')
-                ->select(
-                    'tracking_master.id as master_id',
-                    'tracking_master.description',
-                    'tracking_master.doc_type',
+        if($user->user_priv == 1)
+        {
+            if($doc_type!='ALL'){
+                $data = DB::table('tracking_details')
+                    ->select('tracking_master.id as master_id',
                     'tracking_details.id as tracking_id',
-                    'tracking_details.route_no',
+                    'tracking_master.route_no',
+                    'tracking_details.status',
+                    'tracking_master.description',
                     'tracking_details.date_in',
                     'tracking_details.received_by',
-                    'tracking_details.delivered_by',
-                    'tracking_details.status',
-                    'tracking_details.code'
-                )
-                ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
-                ->where(function($q) use ($keywordLogs){
-                    $q->where('tracking_details.route_no','like',"%$keywordLogs%")
-                        ->orwhere('description','like',"%$keywordLogs%")
-                        ->orWhere('purpose','like',"%$keywordLogs%");
-                })      
-                ->where('received_by',$id)
-                ->where('date_in','>=',$startdate)
-                ->where('date_in','<=',$enddate)
-                ->orderBy('date_in','desc');
+                    'tracking_master.doc_type',
+                    'tracking_details.delivered_by')
+                    ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
+                    ->leftJoin('users', 'tracking_details.received_by', '=', 'users.id')
+                    ->leftJoin('section', 'users.section', '=', 'section.id')
+                    ->where(function($q) use ($keywordLogs){
+                        $q->where('tracking_details.route_no','like',"%$keywordLogs%")
+                            ->orwhere('tracking_master.description','like',"%$keywordLogs%");
+                    })
+                    ->where('doc_type',$doc_type)
+                    ->where('date_in','>=',$startdate)
+                    ->where('date_in','<=',$enddate)
+                    ->orderBy('date_in','desc');
+                $documents = $data->paginate(15);
+                $logs = $data->get();
+                
+            }else{
+                $data = DB::table('tracking_details')
+                    ->select(
+                        'tracking_master.id as master_id',
+                        'tracking_master.description',
+                        'tracking_master.doc_type',
+                        'tracking_details.id as tracking_id',
+                        'tracking_details.route_no',
+                        'tracking_details.date_in',
+                        'tracking_details.received_by',
+                        'tracking_details.delivered_by',
+                        'tracking_details.status',
+                        'tracking_details.code'
+                    )
+                    ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
+                    ->where(function($q) use ($keywordLogs){
+                        $q->where('tracking_details.route_no','like',"%$keywordLogs%")
+                            ->orwhere('description','like',"%$keywordLogs%")
+                            ->orWhere('purpose','like',"%$keywordLogs%");
+                    })      
+                    ->where('date_in','>=',$startdate)
+                    ->where('date_in','<=',$enddate)
+                    ->orderBy('date_in','desc');
 
-            $documents = $data->paginate(15);
-            $logs['data'][] = $data->get();
+                $documents = $data->paginate(15);
+                $logs['data'][] = $data->get(); 
+                 }
         }
+        else
+        {
+            if($doc_type!='ALL'){
+                $data = DB::table('tracking_details')
+                    ->select('tracking_master.id as master_id',
+                    'tracking_details.id as tracking_id',
+                    'tracking_master.route_no',
+                    'tracking_details.status',
+                    'tracking_master.description',
+                    'tracking_details.date_in',
+                    'tracking_details.received_by',
+                    'tracking_master.doc_type',
+                    'tracking_details.delivered_by')
+                    ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
+                    ->leftJoin('users', 'tracking_details.received_by', '=', 'users.id')
+                    ->leftJoin('section', 'users.section', '=', 'section.id')
+                    ->where(function($q) use ($keywordLogs){
+                        $q->where('tracking_details.route_no','like',"%$keywordLogs%")
+                            ->orwhere('tracking_master.description','like',"%$keywordLogs%");
+                    })
+                    ->where('doc_type',$doc_type)
+                    ->where('received_by',$id)
+                    ->where('date_in','>=',$startdate)
+                    ->where('date_in','<=',$enddate)
+                    ->orderBy('date_in','desc');
+                $documents = $data->paginate(15);
+                $logs = $data->get();
+                
+            }else{
+                $data = DB::table('tracking_details')
+                    ->select(
+                        'tracking_master.id as master_id',
+                        'tracking_master.description',
+                        'tracking_master.doc_type',
+                        'tracking_details.id as tracking_id',
+                        'tracking_details.route_no',
+                        'tracking_details.date_in',
+                        'tracking_details.received_by',
+                        'tracking_details.delivered_by',
+                        'tracking_details.status',
+                        'tracking_details.code'
+                    )
+                    ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
+                    ->where(function($q) use ($keywordLogs){
+                        $q->where('tracking_details.route_no','like',"%$keywordLogs%")
+                            ->orwhere('description','like',"%$keywordLogs%")
+                            ->orWhere('purpose','like',"%$keywordLogs%");
+                    })      
+                    ->where('received_by',$id)
+                    ->where('date_in','>=',$startdate)
+                    ->where('date_in','<=',$enddate)
+                    ->orderBy('date_in','desc');
+
+                $documents = $data->paginate(15);
+                $logs['data'][] = $data->get(); 
+                 }
+               
+                }
         return view('document.logs',['documents' => $documents, 'doc_type' => $doc_type, 'daterange' => $str,'keywordLogs' => $keywordLogs]);
     }
 
@@ -1423,6 +1482,7 @@ class DocumentController extends Controller
     }
 
     function sectionLogs(){
+        $user = Session::get('auth');
         $keyword = Session::get('sectionLogs');
         if(isset($keyword))
         {
@@ -1450,41 +1510,80 @@ class DocumentController extends Controller
         Session::put('doc_type',self::docTypeName($doc_type));
         Session::put('doc_type_code',$doc_type);
         Session::put('keywordSectionLogs',$keywordSectionLogs);
-        if($doc_type!='ALL'){
-            $data = DB::table('tracking_details')
-                ->select('tracking_details.id as tracking_id','tracking_master.route_no','tracking_master.description','tracking_details.date_in','tracking_details.received_by','tracking_master.doc_type','tracking_details.delivered_by')
-                ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
-                ->leftJoin('users', 'tracking_details.received_by', '=', 'users.id')
-                ->leftJoin('section', 'users.section', '=', 'section.id')
-                ->where(function($q) use ($keywordSectionLogs){
-                    $q->where('tracking_details.route_no','like',"%$keywordSectionLogs%")
-                        ->orwhere('tracking_master.description','like',"%$keywordSectionLogs%");
-                })
-                ->where('doc_type',$doc_type)
-                ->where('section.id',$section)
-                ->where('date_in','>=',$startdate)
-                ->where('date_in','<=',$enddate)
-                ->orderBy('date_in','desc');
-            $documents = $data->paginate(15);
-            $logs = $data->get();
+        if($user->user_priv == 1)
+        {
+            if($doc_type!='ALL'){
+                $data = DB::table('tracking_details')
+                    ->select('tracking_details.id as tracking_id','tracking_master.route_no','tracking_master.description','tracking_details.date_in','tracking_details.received_by','tracking_master.doc_type','tracking_details.delivered_by')
+                    ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
+                    ->leftJoin('users', 'tracking_details.received_by', '=', 'users.id')
+                    ->leftJoin('section', 'users.section', '=', 'section.id')
+                    ->where(function($q) use ($keywordSectionLogs){
+                        $q->where('tracking_details.route_no','like',"%$keywordSectionLogs%")
+                            ->orwhere('tracking_master.description','like',"%$keywordSectionLogs%");
+                    })
+                    ->where('doc_type',$doc_type)
+                    ->where('date_in','>=',$startdate)
+                    ->where('date_in','<=',$enddate)
+                    ->orderBy('date_in','desc');
+                $documents = $data->paginate(15);
+                $logs = $data->get();
 
-        }else{
-            $data = DB::table('tracking_details')
-                ->select('tracking_details.id as tracking_id','tracking_master.route_no','tracking_master.description','tracking_details.date_in','tracking_details.received_by','tracking_master.doc_type','tracking_details.delivered_by')
-                ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
-                ->leftJoin('users', 'tracking_details.received_by', '=', 'users.id')
-                ->leftJoin('section', 'users.section', '=', 'section.id')
-                ->where(function($q) use ($keywordSectionLogs){
-                    $q->where('tracking_details.route_no','like',"%$keywordSectionLogs%")
-                        ->orwhere('tracking_master.description','like',"%$keywordSectionLogs%");
-                })
-                ->where('section.id',$section)
-                ->where('date_in','>=',$startdate)
-                ->where('date_in','<=',$enddate)
-                ->orderBy('date_in','desc');
-            $documents = $data->paginate(15);
-            $logs = $data->get();
+            }else{
+                $data = DB::table('tracking_details')
+                    ->select('tracking_details.id as tracking_id','tracking_master.route_no','tracking_master.description','tracking_details.date_in','tracking_details.received_by','tracking_master.doc_type','tracking_details.delivered_by')
+                    ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
+                    ->leftJoin('users', 'tracking_details.received_by', '=', 'users.id')
+                    ->leftJoin('section', 'users.section', '=', 'section.id')
+                    ->where(function($q) use ($keywordSectionLogs){
+                        $q->where('tracking_details.route_no','like',"%$keywordSectionLogs%")
+                            ->orwhere('tracking_master.description','like',"%$keywordSectionLogs%");
+                    })
+                    ->where('date_in','>=',$startdate)
+                    ->where('date_in','<=',$enddate)
+                    ->orderBy('date_in','desc');
+                $documents = $data->paginate(15);
+                $logs = $data->get();
+            }
         }
+        else{
+            if($doc_type!='ALL'){
+                $data = DB::table('tracking_details')
+                    ->select('tracking_details.id as tracking_id','tracking_master.route_no','tracking_master.description','tracking_details.date_in','tracking_details.received_by','tracking_master.doc_type','tracking_details.delivered_by')
+                    ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
+                    ->leftJoin('users', 'tracking_details.received_by', '=', 'users.id')
+                    ->leftJoin('section', 'users.section', '=', 'section.id')
+                    ->where(function($q) use ($keywordSectionLogs){
+                        $q->where('tracking_details.route_no','like',"%$keywordSectionLogs%")
+                            ->orwhere('tracking_master.description','like',"%$keywordSectionLogs%");
+                    })
+                    ->where('doc_type',$doc_type)
+                    ->where('section.id',$section)
+                    ->where('date_in','>=',$startdate)
+                    ->where('date_in','<=',$enddate)
+                    ->orderBy('date_in','desc');
+                $documents = $data->paginate(15);
+                $logs = $data->get();
+
+            }else{
+                $data = DB::table('tracking_details')
+                    ->select('tracking_details.id as tracking_id','tracking_master.route_no','tracking_master.description','tracking_details.date_in','tracking_details.received_by','tracking_master.doc_type','tracking_details.delivered_by')
+                    ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
+                    ->leftJoin('users', 'tracking_details.received_by', '=', 'users.id')
+                    ->leftJoin('section', 'users.section', '=', 'section.id')
+                    ->where(function($q) use ($keywordSectionLogs){
+                        $q->where('tracking_details.route_no','like',"%$keywordSectionLogs%")
+                            ->orwhere('tracking_master.description','like',"%$keywordSectionLogs%");
+                    })
+                    ->where('section.id',$section)
+                    ->where('date_in','>=',$startdate)
+                    ->where('date_in','<=',$enddate)
+                    ->orderBy('date_in','desc');
+                $documents = $data->paginate(15);
+                $logs = $data->get();
+            }
+        }
+           
         Session::put('logsDocument',$logs);
 
         return view('document.sectionLogs',['documents' => $documents, 'doc_type' => $doc_type, 'daterange' => $str,'keywordSectionLogs' => $keywordSectionLogs]);

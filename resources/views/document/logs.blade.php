@@ -7,7 +7,9 @@ use App\Release;
 use App\Http\Controllers\ReleaseController as Rel;
 
 $code = Session::get('doc_type_code');
+$user = Session::get('auth');
 
+$admin = $user->user_priv;
 ?>
 @extends('layouts.app')
 
@@ -243,11 +245,20 @@ $code = Session::get('doc_type_code');
                             @else
                                 <td colspan="2" class="text-center" style="vertical-align: middle;">
                                     @if($doc->status==1)
+                                        @if($admin == 1)
                                         <div class="text-info">
-                                            [ Cycle End ]
-                                        </div>
-                                    @endif
+                                                [ Cycle End ]
+                                        <button data-toggle="modal" data-target="#releaseTo" data-id="{{ $doc->tracking_id }}" data-route_no="{{ $doc->route_no }}" onclick="putRoute($(this))" type="button" class="btn btn-info btn-sm"><i class="fa fa-send"></i> Release To</button>
+                                            </div>
+                                        @else
+                                            <div class="text-info">
+                                                [ Cycle End ]
+                                            </div>
+                                        @endif
+                                    @else
                                     <button data-toggle="modal" data-target="#releaseTo" data-id="{{ $doc->tracking_id }}" data-route_no="{{ $doc->route_no }}" onclick="putRoute($(this))" type="button" class="btn btn-info btn-sm"><i class="fa fa-send"></i> Release To</button>
+                                    @endif
+                                    
                                 </td>
                             @endif
                         @endif
