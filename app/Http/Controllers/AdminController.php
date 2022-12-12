@@ -858,6 +858,23 @@ class AdminController extends Controller
                 ->orderBy('tracking_master.id','desc')
                 ->paginate(10);
         }
+        elseif($keyword != null)
+        {
+            $data['documents'] = DB::table('tracking_master')
+            ->select('tracking_master.*','t2.status as status')
+            ->leftJoin('users', 'tracking_master.prepared_by', '=', 'users.id')
+            ->leftJoin(\DB::raw('(SELECT route_no, max(status) as status, max(id) as maxid FROM tracking_details A group by route_no) AS t2'), function($join) {
+                $join->on('tracking_master.route_no', '=', 't2.route_no');
+                 })
+            ->where(function($q) use ($keyword){
+                $q->where('tracking_master.route_no','like',"%$keyword%")
+                    ->orwhere('tracking_master.description','like',"%$keyword%")
+                    ->orWhere('tracking_master.purpose','like',"%$keyword%");
+                    
+            })
+                ->orderBy('tracking_master.id','desc')
+                ->paginate(10);
+        }
         elseif($doc_type == 'ALL')
         {
             $data['documents'] = Tracking::where(function($q) use ($keyword){

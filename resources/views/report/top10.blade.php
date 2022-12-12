@@ -145,6 +145,7 @@ font-size:15px;
     </div>
 </div>
 <script type="text/javascript">
+
     function printReport()
     {
         document.getElementById("print_header").style.display = "block";
@@ -156,7 +157,9 @@ font-size:15px;
             },2000);
         }
 </script>
-
+@endsection
+@section('js')
+@include('js.return')
 @endsection
 @section('plugin')
 

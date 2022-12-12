@@ -140,6 +140,10 @@ Route::post('chd12report/transmittal/addIncident','CHD12ReportController@transad
 Route::get('chd12report/transmittal/incidentlogs','CHD12ReportController@transinciLogs'); 
 Route::post('document/transmittal/perdoc/update/status','CHD12ReportController@transupStatus');  
 
+
+//return
+Route::post('document/return','ReturnCtrl@index');
+
 //tracking flow
 Route::get('chd12report/trackingflow','FlowCtrl@index');
 Route::post('chd12report/trackingflow','FlowCtrl@index'); 

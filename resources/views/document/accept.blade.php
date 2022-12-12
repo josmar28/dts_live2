@@ -141,12 +141,12 @@ function clickYou(){
         document.getElementById("button").disabled = true;
         
     }
-    // var x = document.getElementById("myDIV");
-    // if (count <=0 && x.style.display === "none") {
-    //     x.style.display = "block";
-    // } else {
-    //     x.style.display = "none";
-    // }
+    var x = document.getElementById("myDIV");
+    if (count <=0 && x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
    
 }   
     

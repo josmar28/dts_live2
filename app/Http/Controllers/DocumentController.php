@@ -595,6 +595,8 @@ class DocumentController extends Controller
             return "Referral Slip - Annual Medical and Dental Examination";
         case "1ST_INDORSEMENT" :
             return "First Indorsement";
+        case "WEB_ACC_REQ_FORM" :
+            return "Request Form - Website Access";
          case "ALL" :
             return "All Documents";
          default:

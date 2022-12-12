@@ -258,6 +258,10 @@ class FlowCtrl extends Controller
                     {
                         
                     }
+                    if($data['released_section_to_id'][6] == "")
+                    {
+                        
+                    }
                     else{
                         $bypass[] = $data['route_no'][$i];
                         $bypass_section[] = $data['released_section_to_id'][$i];
