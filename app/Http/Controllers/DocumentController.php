@@ -597,6 +597,8 @@ class DocumentController extends Controller
             return "First Indorsement";
         case "WEB_ACC_REQ_FORM" :
             return "Request Form - Website Access";
+        case "EVAL_FORM" :
+            return "Evaluation Form";
          case "ALL" :
             return "All Documents";
          default:

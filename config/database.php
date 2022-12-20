@@ -80,7 +80,7 @@ return [
 
         'prdb' => [
             'driver' => 'mysql',
-            'host' => '192.168.1.51',
+            'host' => '192.168.1.55',
             'port' => '3306',
             'database' => 'procurement',
             'username' => 'admin',
