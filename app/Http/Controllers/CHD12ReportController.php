@@ -779,7 +779,7 @@ class CHD12ReportController extends Controller
     //    $data = DB::table('vw_avg_documentcount_persection')
     //    ->where('sectionid',115)
     //    ->get();
-
+    
     if($req->newyear)
     {
         $year = $req->newyear;

@@ -1,6 +1,7 @@
 <?php
     use App\Http\Controllers\SectionController as Sec;
     use App\Http\Controllers\AdminController as Admin;
+    use App\Http\Controllers\DocumentController as Doc;
 
 
     $year = Session::get('year_session');
@@ -121,52 +122,7 @@
                 <tbody>
                 @foreach ($data as $row)
                 <?php
-                if($row->doc_type == 'APP_LEAVE')
-                {
-                    $doc_type = 'Application for Leave';
-                }elseif($row->doc_type == 'BILLS')
-                {
-                    $doc_type = 'Bills';
-                } 
-                elseif($row->doc_type == 'GENERAL')
-                {
-                    $doc_type = 'General Documents';
-                } 
-                elseif($row->doc_type == 'INCOMING')
-                {
-                    $doc_type = 'Incoming Mails';
-                } 
-                 elseif($row->doc_type == 'OFFICE_ORDER')
-                {
-                    $doc_type = 'Office Order';
-                } 
-                elseif($row->doc_type == 'PO')
-                {
-                    $doc_type = 'Purchase Order';
-                } 
-                elseif($row->doc_type == 'PRC')
-                {
-                    $doc_type = 'Purchase Request - Cash Advance';
-                } 
-                elseif($row->doc_type == 'PRR_S')
-                {
-                    $doc_type = 'Purchase Request - Regular';
-                } 
-                elseif($row->doc_type == 'ROUTE')
-                {
-                    $doc_type = 'Routing Slip';
-                } 
-                elseif($row->doc_type == 'SAL')
-                {
-                    $doc_type = 'Salary, Honoria, Remittances';
-                } 
-                elseif($row->doc_type == 'TEV')
-                {
-                    $doc_type = 'Travel Expenses Voucher';
-                } 
-                else{
-                    $doc_type = 'Not Define';
-                }
+                $doc_type = Doc::getDocDesc2($row->doc_type);
                 
                 if($row->minutes_duration > 60 && $row->hours_duration > 24)
                 {

@@ -95,7 +95,7 @@
     <tr>
         <td colspan="3">
             <strong>DOCUMENT TYPE:</strong>
-            {{ Doc::getDocType($route_no) }}
+            {{ Doc::getDocDesc($route_no) }}
             <br>
             <br>
         </td>

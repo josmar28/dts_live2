@@ -386,12 +386,27 @@ class DocumentController extends Controller
         Session::put('name','Lourence Rex');
         return Session::get('name');
     }
-
-    public static function getDocType($route_no)
+    public static function getDocDesc ($route_no)
     {
         $doc = Tracking::where('route_no',$route_no)->first();
-        return self::docTypeName($doc->doc_type);
+
+        $desc = Tracking_Filter::where('doc_type',$doc->doc_type)->pluck('doc_description')->first();
+        return $desc;
     }
+
+    public static function getDocDesc2 ($doc_type)
+    {
+        $desc = Tracking_Filter::where('doc_type',$doc_type)->pluck('doc_description')->first();
+        return $desc;
+    }
+
+    public static function getDocType($doc_type)
+    {
+        $desc = Tracking_Filter::where('doc_description',$doc_type)->pluck('doc_type')->first();
+
+        return $desc;
+    }
+    
     public static function docTypeName($type)
     {
         switch($type){

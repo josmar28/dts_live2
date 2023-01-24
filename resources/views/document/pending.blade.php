@@ -104,7 +104,7 @@ use App\Http\Controllers\ReleaseController as Rel;
                         </tr>
                         <tr>
                             <td>Type:</td>
-                            <td>{{ Doc::getDocType($row->route_no) }}</td>
+                            <td>{{ Doc::getDocDesc($row->route_no) }}</td>
                         </tr>
                         <tr>
                             <td>Duration:</td>
@@ -196,7 +196,7 @@ use App\Http\Controllers\ReleaseController as Rel;
                         </tr>
                         <tr>
                             <td>Type:</td>
-                            <td>{{ Doc::getDocType($row->route_no) }}</td>
+                            <td>{{ Doc::getDocDesc($row->route_no) }}</td>
                         </tr>
                         <tr>
                             <td>Duration:</td>
@@ -281,7 +281,7 @@ use App\Http\Controllers\ReleaseController as Rel;
                         </tr>
                         <tr>
                             <td>Type:</td>
-                            <td>{{ Doc::getDocType($row->route_no) }}</td>
+                            <td>{{ Doc::getDocDesc($row->route_no) }}</td>
                         </tr>
                         <tr>
                             <td>Duration:</td>

@@ -85,7 +85,7 @@
                   
                     </td>
                     <td>{{ date('M d, Y',strtotime($doc->prepared_date)) }}<br>{{ date('h:i:s A',strtotime($doc->prepared_date)) }}</td>
-                    <td>{{ \App\Http\Controllers\DocumentController::docTypeName($doc->doc_type) }}</td>
+                    <td>{{ \App\Http\Controllers\DocumentController::getDocDesc2($doc->doc_type)}}</td>
                     <td>
                       
                             {!! nl2br($doc->description) !!}
