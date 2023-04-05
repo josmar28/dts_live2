@@ -4,7 +4,7 @@
     use App\User as User;
     use App\Http\Controllers\DocumentController as Doc;
     use App\Section;
-    $route_nos = $route_no;
+    $route_nos = Session::get('testtrack_route_no');
     $document = Tracking::where('route_no',$route_nos)->first();
     $tracking = Tracking_Details::where('route_no',$route_nos)
         ->orderBy('id','asc')
@@ -51,7 +51,7 @@
 <div style="position: absolute; left: 53%;">
     <div class="barcode">
     <?php echo DNS1D::getBarcodeHTML($route_nos,"C39E",1,43) ?>
-        <font class="route_no">{{ $route_no }}</font>
+        <font class="route_no">{{ $route_nos }}</font>
     </div>
 </div>
 <table class="upper" cellpadding="0" cellspacing="0">
@@ -95,7 +95,7 @@
     <tr>
         <td colspan="3">
             <strong>DOCUMENT TYPE:</strong>
-            {{ Doc::getDocType($route_no) }}
+            {{ Doc::getDocType($route_nos) }}
             <br>
             <br>
         </td>

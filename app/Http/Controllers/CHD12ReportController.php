@@ -196,7 +196,7 @@ class CHD12ReportController extends Controller
         // $end_date = Carbon::parse($end)->endOfDay();
         $end_date = date('Y/m/d'.' 12:59:59');
       
-        $start_date = date('2022/03/01'.' 12:00:00');
+        $start_date = date('2023/02/01'.' 12:00:00');
         
         if($req->keyword)
         {
@@ -219,8 +219,8 @@ class CHD12ReportController extends Controller
             ->where('chd12_incidentreport.incident_typeid',null) 
             ->where('tracking_releasev2.released_section_to',$user->section)
             ->orderBy('t2.maxid','desc')
-            ->where('chd12_incidentreport.dateencoded','>=',$startdate)
-            ->where('chd12_incidentreport.dateencoded','<=',$enddate)
+            ->where('chd12_incidentreport.dateencoded','>=',$end_date)
+            ->where('chd12_incidentreport.dateencoded','<=',$start_date)
             ->paginate(10);
         }
         else
@@ -346,9 +346,16 @@ class CHD12ReportController extends Controller
             ->where('code',"=",'temp;'.$section)
             ->first();
 
+            // if($validation)
+            // {
+            //     return redirect('document/release')->with('used','Please refresh Route No '. $route_no .' is already released');
+            // }
             if($validation)
             {
-                return redirect('document/release')->with('used','Please refresh Route No '. $route_no .' is already released');
+                $error['errors'] ='Please refresh Route No '. $route_no .' is already released';
+                continue;
+            }else{
+                $error['errors'] =null;
             }
 
           }
@@ -371,7 +378,7 @@ class CHD12ReportController extends Controller
             $doc = Tracking::where('route_no',$route_no)
                 ->orderBy('id','desc')
                 ->first();
-
+            
             
                     if($doc)
                     {
@@ -429,11 +436,11 @@ class CHD12ReportController extends Controller
                         $status['errors'][] = 'Route No. "'. $route_no . '" not found in the database. ';
                     }
                  }
-             return redirect('document/release')->with('status',$status);    
+                 return redirect('document/release')->with('status',$status)->with('errors',$error);  
       
     }
 
-    public function perTrans(Request $req, $TRN, $desc)
+    public function perTrans(Request $req, $TRN)
     {
         $keyword = $req->keyword;
         $status = Transmittal::where('trn',$TRN)->pluck('status')->first();
@@ -464,7 +471,7 @@ class CHD12ReportController extends Controller
         return view ('document.per_transmittal',[
             'data' => $data,
             'TRN' => $TRN,
-            'desc' => $desc,
+            'desc' => '',
             'status' => $status
         ]);
     }
@@ -560,15 +567,44 @@ class CHD12ReportController extends Controller
         //     }
         //     else if($req->valid == 'create')
         //     {
+            if($user->section == 83)
+            {
                 $documents = Tracking_Details::select(
                     'tracking_details.*',
                     'tracking_master.doc_type as doc_type',
-                    'tracking_master.prepared_date as prepared_date'
+                    'tracking_master.prepared_date as prepared_date',
+                    'delivered_by.fname',
+                    'delivered_by.lname',
                 )
-                  ->leftJoin('tracking_master','tracking_details.route_no','=','tracking_master.route_no')
-                  ->leftJoin('users','tracking_details.delivered_by','=','users.id')
-                  ->where('tracking_details.code','like',"%temp%")
-                    ->where('users.section',$user->section)
+                    ->leftJoin('tracking_master','tracking_details.route_no','=','tracking_master.route_no')
+                    ->leftJoin('users as delivered_by','tracking_details.delivered_by','=','delivered_by.id')
+                    ->where('tracking_details.code','like',"%temp%")
+                    ->where('delivered_by.section',$user->section)
+                    // ->where('tracking_details.delivered_by',$user->id)
+                    ->where('tracking_details.status',0)
+                    ->orderBy('tracking_details.date_in','desc')
+                    // ->whereNotExists(function($query)use($user_id)
+                    //             {
+                    //                 $query->select(DB::raw(1))
+                    //                     ->from('transmittal_data')
+                    //                     ->where('transmittal_data.released_by',$user_id)
+                    //                     ->whereRaw('tracking_details.route_no = transmittal_data.route_no');
+                    //             })  
+                    ->get();
+            }
+            else{
+                $documents = Tracking_Details::select(
+                    'tracking_details.*',
+                    'tracking_master.doc_type as doc_type',
+                    'tracking_master.prepared_date as prepared_date',
+                    'delivered_by.fname',
+                    'delivered_by.lname',
+                )
+                    ->leftJoin('tracking_master','tracking_details.route_no','=','tracking_master.route_no')
+                    ->leftJoin('users as delivered_by','tracking_details.delivered_by','=','delivered_by.id')
+                    ->where('tracking_details.code','like',"%temp%")
+                    ->where('delivered_by.section',$user->section)
+                    ->where('tracking_details.delivered_by',$user->id)
                     ->where('tracking_details.status',0)
                     ->orderBy('tracking_details.date_in','desc')
                     ->whereNotExists(function($query)use($user_id)
@@ -579,6 +615,7 @@ class CHD12ReportController extends Controller
                                         ->whereRaw('tracking_details.route_no = transmittal_data.route_no');
                                 })  
                     ->get();
+            }
             // }
 
         return view('document.transmittal_body',[

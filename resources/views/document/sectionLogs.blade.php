@@ -40,7 +40,20 @@ $code = Session::get('doc_type_code');
                     <input type="text" class="form-control" id="reservation" name="daterange" value="{{ isset($daterange) ? $daterange: null }}" placeholder="Input date range here..." required>
                 </div>
                 <div class="input-group">
-                    <select data-placeholder="Select Document Type" name="doc_type" class="chosen-select" tabindex="5" required>
+                    <select id="doc_type" name="doc_type" class="form-control" required>
+                        <option value="">Select Document Type</option>
+                        <?php
+                            $doc_types = App\Tracking_Filter::where('doc_type', '!=' , 'GENERAL')
+                            ->where('doc_type', '!=' , 'PRC')
+                            ->where('doc_type', '!=' , 'PRR_M')
+                            ->orderby('doc_description','asc')
+                            ->get();
+                        ?>
+                        @foreach($doc_types as $row)
+                            <option {{ ($doc_type == $row->doc_type ? 'selected' : '') }} value="{{ $row->doc_type }}"> {{ $row->doc_description }}</option>
+                        @endforeach
+                    </select>
+                    <!-- <select data-placeholder="Select Document Type" name="doc_type" class="chosen-select" tabindex="5" required>
                         <option value=""></option>
                         <option value="ALL" <?php if($code=='ALL') echo 'selected';?>>All Documents</option>
                         <optgroup label="Disbursement Voucher">
@@ -84,7 +97,7 @@ $code = Session::get('doc_type_code');
                         <option <?php if($code=='PRR_S') echo 'selected'; ?> value="PRR_S">Purchase Request - Regular Purchase</option>
                         <option>Reports</option>
                         <option <?php if($code=='GENERAL') echo 'selected'; ?> value="GENERAL">General Documents</option>
-                    </select>
+                    </select> -->
                 </div>
                 <button type="submit" class="btn btn-success" onclick="checkDocTye()"><i class="fa fa-search"></i> Filter</button>
                 @if(count($documents))

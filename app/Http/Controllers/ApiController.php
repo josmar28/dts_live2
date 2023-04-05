@@ -27,11 +27,14 @@ use Illuminate\Support\Facades\Hash;
 
 class ApiController extends Controller
 {
-        function testTrack(Request $req){
+        function testTrack(Request $req)
+    {
         $route_no = $req->route_no;
-        return view("form.testtrack" ,[
-            'route_no' => $route_no
-        ]);
+        Session::put('testtrack_route_no',$route_no);
+        $display = view("form.testtrack");
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadHTML($display);
+        return $pdf->stream();
     }
 
     public function getUser(Request $req) {

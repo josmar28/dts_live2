@@ -24,6 +24,7 @@
                 <tr>
                     <th width="8%"></th>
                     <th width="20%">Route #</th>
+                    <th width="15%">Delivered By</th>
                     <th width="15%">Prepared Date</th>
                     <th width="20%">Document Type</th>
                     <th>Deliverd To</th>
@@ -40,7 +41,10 @@
                     </td>
                     <td>
                     {{ $doc->route_no }}
-                    </td>                 
+                    </td>        
+                    <td>
+                    {{ $doc->fname }} {{ $doc->lname }}
+                    </td>          
                     <td>{{ date('M d, Y',strtotime($doc->prepared_date)) }}<br>{{ date('h:i:s A',strtotime($doc->prepared_date)) }}</td>
                     <td>
                     {{ $doc->doc_type }}
@@ -55,7 +59,7 @@
                                     $section = "NO SECTION";
                                 }
                             ?>
-                 {{ $section }}
+                    {{ $section }}
                     </td>
                 </tr>
                 @endforeach

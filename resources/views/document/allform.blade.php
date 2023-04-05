@@ -27,17 +27,17 @@ $filter = Doc::isIncluded($doc_type);
               <tr>
                 <td class="text-right col-lg-4">Document Type :</td>
                 <td class="col-lg-8">
-            <select id="doc_type" name="doc_type" class="form-control" required>
-           <option value="">Select Document Type</option>
-           <?php
-            $doc_types = App\Tracking_Filter::where('doc_type', '!=' , 'GENERAL')
-            ->where('doc_type', '!=' , 'PRC')
-            ->where('doc_type', '!=' , 'PRR_M')
-            ->orderby('doc_description','asc')
-            ->get();
-           ?>
+        <select id="doc_type" name="doc_type" class="form-control" required>
+            <option value="">Select Document Type</option>
+            <?php
+                $doc_types = App\Tracking_Filter::where('doc_type', '!=' , 'GENERAL')
+                ->where('doc_type', '!=' , 'PRC')
+                ->where('doc_type', '!=' , 'PRR_M')
+                ->orderby('doc_description','asc')
+                ->get();
+            ?>
              @foreach($doc_types as $row)
-          <option {{ ($doc_type == $row->doc_type ? 'selected' : '') }} value="{{ $row->doc_type }}"> {{ $row->doc_description }}</option>
+                <option {{ ($doc_type == $row->doc_type ? 'selected' : '') }} value="{{ $row->doc_type }}"> {{ $row->doc_description }}</option>
               @endforeach
          </select>
                 </td>

@@ -71,7 +71,7 @@
                         <i class="fa fa-trash"></i> Remove
                     </a>
                     </td>
-                   <td> <a class="title-info" target="_blank" href="{{ asset('document/pertransmittal/'.$doc->trn.'/'.$doc->description) }}">{{ $doc->trn }}</a></td>
+                   <td> <a class="title-info" target="_blank" href="{{ asset('document/pertransmittal/'.$doc->trn.'/') }}">{{ $doc->trn }}</a></td>
                    <td> {{ $doc->description }} </td>
                    <td>{{ $doc->fname }} {{ $doc->lname }}</td>
                    <td>{{ $doc->created_at }} </td>
@@ -87,7 +87,7 @@
                         </a> 
                        
                     </td>
-                   <td> <a class="title-info" target="_blank" href="{{ asset('document/pertransmittal/'.$doc->trn.'/'.$doc->description) }}">{{ $doc->trn }}</a></td>
+                   <td> <a class="title-info" target="_blank" href="{{ asset('document/pertransmittal/'.$doc->trn.'/') }}">{{ $doc->trn }}</a></td>
                    <td> {{ $doc->description }} </td>
                    <td>{{ $doc->fname }} {{ $doc->lname }}</td>
                    <td>{{ $doc->created_at }} </td>

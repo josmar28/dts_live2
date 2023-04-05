@@ -9,6 +9,11 @@ if(!Session::get('is_login')){
     Session::put('is_login',true);
     
 }
+
+$end_date = date('Y/m/d'.' 12:59:59');
+// $start_date = date('Y/m/d'.' 12:00:00', strtotime ( '-1 month'));
+$start_date1 = date('2023/01/01'.' 12:00:00');
+
 $user = Session::get('auth');
 $code = 'temp;'.$user->section;
 $pending = \App\Tracking_Details::select(
@@ -20,6 +25,7 @@ $pending = \App\Tracking_Details::select(
             'delivered_by',
             'action'
         )
+        ->where('tracking_details.date_in','>=',$start_date1)
         ->where('code',$code)
         ->where('status',0)
         ->count();
@@ -29,12 +35,9 @@ $pending = \App\Tracking_Details::select(
  
         // $start_date = Carbon::parse($start)->startOfDay();
         // $end_date = Carbon::parse($end)->endOfDay();
-
-        $end_date = date('Y/m/d'.' 12:59:59');
-        // $start_date = date('Y/m/d'.' 12:00:00', strtotime ( '-1 month'));
-        $start_date = date('2022/03/01'.' 12:00:00');
-
-    $incident =  DB::table('tracking_releasev2')
+        $start_date = date('2023/02/01'.' 12:00:00');
+      
+        $incident =  DB::table('tracking_releasev2')
         ->select('tracking_releasev2.*','chd12_incidentreport.*','chd12_incidenttype.incident_type','tracking_master.description','t2.date_in')
         ->leftJoin('chd12_incidentreport', 'chd12_incidentreport.releasev2mainid', '=', 'tracking_releasev2.id')
         ->leftJoin(\DB::raw('(SELECT route_no, max(id) as maxid, max(date_in) as date_in FROM tracking_details A group by route_no) AS t2'), function($join) {

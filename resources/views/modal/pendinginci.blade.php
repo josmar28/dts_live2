@@ -13,7 +13,7 @@ $user = Session::get('auth');
 // $end_date = Carbon::parse($end)->endOfDay();
 
 $end_date = date('Y/m/d'.' 12:59:59');
-$start_date = date('2022/03/01'.' 12:00:00');
+$start_date = date('2023/02/01'.' 12:00:00');
 
 
 $incident =  DB::table('tracking_releasev2')

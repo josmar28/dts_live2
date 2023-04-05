@@ -42,6 +42,7 @@ foreach($po_no as $po_num)
             <th width="13.2%">Date In</th>
             <th width="14.2%">Subject</th>
             <th width="14.2%">For Released To</th>
+            <th width="14.2%">Released by</th>
             <th width="13.2%">Released by Date/Time</th>
             <th width="14.2%">Duration</th>
             <th width="16.2%">Released Remarks</th>
@@ -80,6 +81,17 @@ foreach($po_no as $po_num)
                     } else {
                         $data['released_section_to'][] = "No Data";
                     }
+
+                    if($user = User::find($released->released_by)){
+                        $sectionid = $user->section;
+                        $data['released_by'][] = $user->fname.' '.$user->lname;
+                        $data['released_by_section'][] = (Section::find($user->section)) ? Section::find($user->section)->description:'';
+                        $division_from = (Section::find($user->section)) ? Section::find($user->section)->division:'';
+                    } else {
+                        $data['released_by'][] = "No Name".' '.$released->released_by;
+                        $data['released_by_section'][] = "No Section";
+                    }
+
                     $data['released_date_time'][] = $released->released_date;
                     $data['released_duration_status'][] = $released->rel_status;
                     $data['released_date'][] = date('M d, Y', strtotime($released->released_date));
@@ -117,6 +129,8 @@ foreach($po_no as $po_num)
                     
                     }
                 } else {
+                    $data['released_by_section'][] = "";
+                    $data['released_by'][] = "";
                     $data['released_alert'][]  = "";
                     $data['released_section_to'][] = "";
                     $data['released_date_time'][] = "";
@@ -154,6 +168,11 @@ foreach($po_no as $po_num)
                     {{ $data['released_section_to'][$i] }}
                     <br>
                     {!! $data['released_status'][$i] !!}
+                </td>
+                <td class="text-bold trackFontSize {{ $received_success }}">{{ $data['released_by'][$i] }}
+                    <br>
+                    <small class="text-warning">{{ $data['released_by_section'][$i] }}</small>
+                    <br>
                 </td>
                 <td class="trackFontSize {{ $released_info }}">
                     {{ $data['released_date'][$i] }}

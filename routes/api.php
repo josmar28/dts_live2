@@ -14,6 +14,6 @@ use Illuminate\Http\Request;
 */
 
 
-Route::post('api/pdf/testtrack','ApiController@testTrack');
+Route::post('pdf/testtrack','ApiController@testTrack');
 Route::post('getuser','ApiController@getUser');
 

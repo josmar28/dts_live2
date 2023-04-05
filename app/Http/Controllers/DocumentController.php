@@ -177,18 +177,21 @@ class DocumentController extends Controller
             $doc = Tracking::where('route_no',$route_no)
                 ->orderBy('id','desc')
                 ->first();
-            if($doc){
+            if($doc)
+            {
                 $document = Tracking_Details::where('route_no',$route_no)
                     ->orderBy('id','desc')
                     ->first();
-                if($document):
+                if($document){
                     Tracking_Details::where('route_no',$route_no)
-                        ->where('received_by',$document->received_by)
-                        ->update(['status'=> 1]);
+                        ->where('received_by',$document->received_by);
+                        // ->update(['status'=> 1]);
+
                     $received_by = $document->received_by;
-                else:
+                }
+                else{
                     $received_by = $doc->prepared_by;
-                endif;
+                }
 
                 $section = 'temp;'.$user->section;
                 if($document->code === $section)
@@ -717,7 +720,7 @@ class DocumentController extends Controller
         $incomingPage = 1;
         $outgoingPage = 1;
         $unconfirmPage = 1;
-
+        $start_date = date('2023/01/01'.' 12:00:00');
         // if($request->page){
         //     switch (explode('type=',$request->page)[1]){
         //         case 'incoming':
@@ -755,6 +758,7 @@ class DocumentController extends Controller
             ->where(function($q) use ($keywordIncoming){
                 $q->where('route_no','like',"%$keywordIncoming%");
             })
+            ->where('tracking_details.date_in','>=',$start_date)
             ->orderBy('tracking_details.date_in','desc')
             ->paginate(10, ['*'], 'incoming');
 

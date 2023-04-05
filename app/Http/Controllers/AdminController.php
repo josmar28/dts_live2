@@ -35,6 +35,7 @@ class AdminController extends Controller
 
         
         $users = User::where('id','!=', $request->id)
+                    ->orderBy('id', 'desc')
                     ->paginate(10);
         return view('users.users')
                 ->with('users',$users);
@@ -822,7 +823,7 @@ class AdminController extends Controller
         {
             $data['documents'] = DB::table('tracking_master')
             ->select('tracking_master.*','t2.status as status')
-            ->leftJoin('users', 'tracking_master.prepared_by', '=', 'users.route_no')
+            ->leftJoin('users', 'tracking_master.prepared_by', '=', 'users.id')
             ->leftJoin(\DB::raw('(SELECT route_no, max(status) as status, max(id) as maxid FROM tracking_details A group by route_no) AS t2'), function($join) {
                 $join->on('tracking_master.route_no', '=', 't2.route_no');
                  })

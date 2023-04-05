@@ -39,7 +39,7 @@ class PasswordController extends Controller
         if($validator->fails()){
            return redirect('/change/password')->with('error', $validator->messages());
         }
-        $user = User::find($request->user()->id);
+        $user = User::find(Session::get('auth')->id);
         if(Hash::check($request->input('current_password'),$user->password)){
             $user->password = Hash::make($request->input('password_confirmation'));
             $user->save();

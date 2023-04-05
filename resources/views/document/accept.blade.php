@@ -1,6 +1,15 @@
 @extends('layouts.app')
 @section('content')
-<div class="col-md-12 wrapper">
+
+<style>
+.chosen-select {
+  width: 5%;
+}
+.chosen-select-deselect {
+  width: 5%;
+}
+</style>
+<div class="col-md-12">
     <div class="alert alert-jim">
         @if (session('status'))
             <?php
@@ -56,12 +65,19 @@
                             {{ date('M d, Y h:i:s A') }}
                         </td>
                         <td>
-                        <input list="route_no" name="route_no[]" class="form-control" id="<?php echo "id".$i; ?>"  onkeyup ="clickYou()">
+                        <!-- <input list="route_no" name="route_no[]" class="form-control" id="<?php echo "id".$i; ?>"  onkeyup ="clickYou()">
                         <datalist id = "route_no">
-                        @foreach($data as $dataa)
+                            @foreach($data as $dataa)
                                 <option value="{{ $dataa->route_no }}" >{{ $dataa->route_no }}</option>
                             @endforeach
-                        </datalist>
+                        </datalist> -->
+
+                            <select name="route_no[]" id="<?php echo "id".$i; ?>" class="chosen-select" onkeyup ="clickYou()">
+                                <option value="">Select code...</option>
+                                @foreach($data as $dataa)
+                                    <option value="{{ $dataa->route_no }}" >{{ $dataa->route_no }}</option>
+                                @endforeach
+                            </select>
                         </td>
                         <td>
                             <input type="text" id="<?php echo "sec".$i; ?>" onchange ="clickYou()" name="remarks[]" class="form-control remarks" disabled placeholder="Enter remarks">
@@ -80,7 +96,7 @@
                 @endfor
                 <tr>
                     <td colspan="4" class="text-right">
-                    <div id="myDIV" style="display:"> <button type="submit" id="button" class="btn btn-success btn-lg btn-accept btn-submit" disabled><i class="fa fa-plus"></i> Accept Document</button> </div>
+                        <div id="myDIV" style="display:"> <button type="submit" id="button" class="btn btn-success btn-lg btn-accept btn-submit" disabled><i class="fa fa-plus"></i> Accept Document</button> </div>
                     </td>
                 </tr>
                 </tbody>

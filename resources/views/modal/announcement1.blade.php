@@ -83,40 +83,26 @@
                             <ol type="A">
                                 <li >System Error</li>
                                 <ol>
-                                    <li>Ronnie B. Cadorna, Jr. - 09169439885</li>
                                     <li>Josmar V. Del Poso – 09167063036</li>
-                                    <li>Michael F. Zingapan - 09156379948</li>
+                                    <li>ARON JOSEPH B BRA - 09515359406</li>
                                 </ol>
                                 <li >Server - The request URL not found</li>
                                 <ol>
                                     <li>Garizaldy B. Epistola - 09338161374</li>
                                     <li>John Philip M. Nacional - 09169229872</li>
                                     <li>Kenny S. Marañon - 09158742458</li>
-                                  
                                 </ol>
                                 <li >System Implementation/Training</li>
                                 <ol>
-                                    <li>Sarah Jane B. Bra - 09269579981</li>
-                                    <li>Mel Ritchie K. Lomboy - 09162397460</li>
-                                    <li>Bai Johaina L. Sinarimbo</li>
-                                    <li>Victor P. Macion Jr. - 09554870211</li>
+                                    <li>MICHAEL R. BIRUAR - 09264029988</li>
                                 </ol>
                                 <li >
                                     Register Account and Forget Password
                                 </li>
                                 <ol>
-                                    <li>Sarah Jane B. Bra - 09269579981</li>
-                                    <li>Mel Ritchie K. Lomboy - 09162397460</li>
-                                    <li>Bai Johaina L. Sinarimbo </li>
-                                    <li>Ronnie B. Cadorna, Jr. - 09169439885</li>
+                                    <li>MICHAEL R. BIRUAR - 09264029988</li>
                                     <li>Josmar V. Del Poso – 09167063036</li>
-                                    <li>Michael F. Zingapan - 09156379948</li>
-                                </ol>
-                            </ol>
-                            <li>Admin / Other matters</li>
-                            <ol type="A">
-                                <ol>
-                                    <li >Joyce Rona C. Soliva – 09361854128</li>
+                                    <li>ARON JOSEPH B BRA - 09515359406</li>
                                 </ol>
                             </ol>
                         </ol>

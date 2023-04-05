@@ -30,6 +30,18 @@
                 <strong>{{ Session::get('used') }}</strong>
             </div>
         @endif
+        @if (session('errors'))
+                @if(isset($status['errors']))
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors['errors'] as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+        @endif
+
         <h2 class="page-header">Release Documents</h2>
         <form class="form-submit" id="" method="post" action="{{ asset('document/saveRelease') }}">
             {{ csrf_field() }}
