@@ -107,14 +107,16 @@ return [
         'dtr' => array(
             'driver'    => 'mysql',
             'host'      => 'localhost',
+            'port' => '3306',
             'database'  => 'dohdtr',
             'username'  => 'rtayong_39',
             'password'  => 'rtayong_39',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
+            'strict' => false,
+            'engine' => null,
         ),
-
     ],
 
     /*
