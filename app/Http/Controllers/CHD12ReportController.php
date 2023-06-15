@@ -431,10 +431,11 @@ class CHD12ReportController extends Controller
 
                             $status='releaseAdded';    
                         
-                        }else{
+                        }
+                        else{
                         
                         $status['errors'][] = 'Route No. "'. $route_no . '" not found in the database. ';
-                    }
+                        }
                  }
                  return redirect('document/release')->with('status',$status)->with('errors',$error);  
       

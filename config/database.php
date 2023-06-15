@@ -106,10 +106,10 @@ return [
 
         'dtr' => array(
             'driver'    => 'mysql',
-            'host'      => '192.168.1.51',
+            'host'      => 'localhost',
             'database'  => 'dohdtr',
-            'username'  => 'root',
-            'password'  => 'r00t',
+            'username'  => 'rtayong_39',
+            'password'  => 'rtayong_39',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',

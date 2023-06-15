@@ -237,7 +237,7 @@
             });
         }
 
-        $('.btn-remote-incoming').click(function(e){
+        $('.btn-remove-incoming').click(function(e){
             e.preventDefault();
             var id = $(this).closest('.list-group-item').data('id');
             $('#removeIncoming').data('id',id).modal('show');
@@ -266,7 +266,7 @@
             });
         });
 
-        $('.btn-remote-outgoing').click(function(e){
+        $('.btn-remove-outgoing').click(function(e){
             e.preventDefault();
             var id = $(this).closest('.list-group-item').data('id');
             $('#removeOutgoing').data('id',id).modal('show');

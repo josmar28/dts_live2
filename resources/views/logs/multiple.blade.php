@@ -88,7 +88,7 @@ $div = (Division::find($division)) ? Division::find($division)->description:'';
                         if($user = Users::find($out->received_by)){
                             $rec_fname = $user->fname;
                             $rec_lname = $user->lname;
-                            $rec_section = Section::find($user->section)->description;
+                            $rec_section = Section::find($user->section) ? Section::find($user->section)->description:'';
                         }else{
                             $id = Session::get('auth')->id;
                             $user = Tracking_Releasev2::where('released_by',$doc->delivered_by)
@@ -98,7 +98,7 @@ $div = (Division::find($division)) ? Division::find($division)->description:'';
 
                             $rec_fname = " ";
                             $rec_lname = " ";
-                            $rec_section = Section::find($user->released_section_to)->description;
+                            $rec_section = Section::find($user->released_section_to) ? Section::find($user->released_section_to)->description:'';
                         }
                     ?>
                     {{ $rec_fname }}

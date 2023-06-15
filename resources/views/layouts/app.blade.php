@@ -90,6 +90,12 @@ $pending = \App\Tracking_Details::select(
     <!-- bootstrap wysihtml5 - text editor -->
     <link href="{{ asset('resources/plugin_old/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}" rel="stylesheet">
     <link href="{{ asset('resources/plugin_old//Lobibox/lobibox.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('resources/assets/fontawesome/css/all.css') }}" rel="stylesheet">
+    <link href="{{ asset('resources/assets/fontawesome/css/fontawesome.css') }}" rel="stylesheet">
+    <link href="{{ asset('resources/assets/fontawesome/css/brands.css') }}" rel="stylesheet">
+    <link href="{{ asset('resources/assets/fontawesome/css/solid.css') }}" rel="stylesheet">
+    <link href="{{ asset('resources/assets/fontawesome/css/v5-font-face.css') }}" rel="stylesheet">
     @yield('css')
     <style>
         body {
@@ -188,7 +194,7 @@ $pending = \App\Tracking_Details::select(
                         <li class=""><a href="{{ asset('document/transmittal')  }}"><i class="fa fa-plus"></i> Transmittal</a></li>
                         <li><a href="{{ asset('document') }}"><i class="fa fa-file"></i> My Documents</a></li>
                         <li><a href="{{ asset('chd12report/secDuration') }}"><i class="fa fa-bar-chart"></i> Document Duration Report</a></li>
-                        @if( (Session::get('auth')->user_priv==1 || Session::get('auth')->username=='2002000972') ||  Session::get('auth')->section == 82 || Session::get('auth')->section == 100)
+                        @if( (Session::get('auth')->user_priv==1 || Session::get('auth')->username=='2002000972') || (Session::get('auth')->section == 82 || Session::get('auth')->section == 100) )
                         <li><a href="{{ asset('document/list') }}"><i class="fa fa-file"></i> All Documents</a></li>
                         @endif
                     </ul>

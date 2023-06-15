@@ -42,7 +42,12 @@
                 @endif
         @endif
 
-        <h2 class="page-header">Release Documents</h2>
+        <h2 class="page-header">Release Documents</h2><br>
+        <div class="alert alert-warning">
+            <div class="text-warning">
+                <h2><i class="fas fa-bullhorn"></i> If route number is not found please check if it is accepted  <h2>
+            </div>
+        </div>
         <form class="form-submit" id="" method="post" action="{{ asset('document/saveRelease') }}">
             {{ csrf_field() }}
 
@@ -74,13 +79,22 @@
                             {{ date('M d, Y h:i:s A') }}
                         </td>
                         <td>
-
-                        <input list="route_no" name="route_no[]" class="form-control" id="<?php echo "id".$i; ?>"  onkeyup ="clickYou()">
-                        <datalist id = "route_no">
-                        @foreach($data as $dataa)
-                                <option value="{{ $dataa->route_no }}" >{{ $dataa->route_no }}</option>
-                            @endforeach
-                        </datalist>
+                            @if( Session::get('auth')->section == 90 || Session::get('auth')->section == 83 || Session::get('auth')->section == 99)
+                            <select name="route_no[]" id="<?php echo "id".$i; ?>" class="chosen-select" onkeyup ="clickYou()">
+                                    <option value="">Select code...</option>
+                                    @foreach($data as $dataa)
+                                        <option value="{{ $dataa->route_no }}" >{{ $dataa->route_no }}</option>
+                                    @endforeach
+                                </select>
+                            @else
+                            <input list="route_no" name="route_no[]" class="form-control" id="<?php echo "id".$i; ?>"  onkeyup ="clickYou()">
+                                <datalist id = "route_no">
+                                @foreach($data as $dataa)
+                                        <option value="{{ $dataa->route_no }}" >{{ $dataa->route_no }}</option>
+                                    @endforeach
+                                </datalist>
+                              
+                            @endif
                      
                         </td>
                         <td>
@@ -156,6 +170,9 @@ function clickYou(){
              ///   var new2 = "id"+inc;
               //  var new2val = document.getElementById(new2).value;
              // vals2 = vals2 + "," + secval;
+
+
+             console.log(id);
             
                 if((val2.length > 0 && secval==0 ) || (val2.length == 0 && secval.length > 0))
                 {
