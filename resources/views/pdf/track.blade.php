@@ -67,7 +67,7 @@
         <!--
             {{--<td width="20%"><?php echo DNS2D::getBarcodeHTML(Session::get('route_no'), "QRCODE",5,5); ?></td>--}}
         -->
-        <?php $image_path = '/img/f1.jpg'; ?>
+        <?php $image_path = '/img/dohro12logo.png'; ?>
         <td width="20%"><center><img src="{{ public_path() . $image_path }}" width="100"></center></td>
     </tr>
 

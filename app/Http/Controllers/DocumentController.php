@@ -68,7 +68,7 @@ class DocumentController extends Controller
             ->where('code',$code)
             ->where('status',0)
             ->orderBy('tracking_details.date_in','desc')
-            ->paginate(200);
+            ->paginate(300);
 
         return view('document.accept',[
             'data' => $data
@@ -119,7 +119,7 @@ class DocumentController extends Controller
     //RUSEL
     public function connect()
     {
-        return new PDO("mysql:host=192.168.1.51;dbname=dohdtr",'root','r00t');
+        return new PDO("mysql:host=localhost;dbname=dohdtr",'rtayong_39','rtayong_39');
     }
     public function getSO($route_no)
     {
@@ -168,7 +168,7 @@ class DocumentController extends Controller
         $id = $user->id;
         $status = array();
         echo '<pre>';
-        for($i=0;$i<10;$i++):
+        for($i=0;$i<15;$i++):
             if(!$request->route_no[$i])
             {
                 continue;
@@ -685,9 +685,10 @@ class DocumentController extends Controller
             
             if($barcode)
             {
-                $pr_no = DB::connection('prdb')->table('procure_main')->where('id',$barcode)
-                ->whereNotNull('L1-trackno')
-                ->pluck('L1-trackno');
+                // $pr_no = DB::connection('prdb')->table('procure_main')->where('id',$barcode)
+                // ->whereNotNull('L1-trackno')
+                // ->pluck('L1-trackno');
+                $pr_no = array();
             }
             else{
                 $pr_no = array();
@@ -779,6 +780,7 @@ class DocumentController extends Controller
                 $q->where('route_no','like',"%$keywordOutgoing%");
             })
             ->where('status',0)
+            ->where('tracking_details.date_in','>=',$start_date)
             ->orderBy('tracking_details.date_in','desc')
             ->paginate(10, ['*'], 'outgoing');
 
@@ -793,6 +795,7 @@ class DocumentController extends Controller
         )
             ->leftJoin('users','tracking_details.delivered_by','=','users.id')
                 ->where('tracking_details.code','like',"%temp%")
+                ->where('tracking_details.date_in','>=',$start_date)
                 ->where('users.section',$user->section)
                 ->where('tracking_details.status',0)
                 ->where(function($q) use ($keywordUnconfirmed){
@@ -1061,6 +1064,8 @@ class DocumentController extends Controller
 
     public static function countPendingDocuments()
     {
+        $end_date = date('Y/m/d'.' 12:59:59');
+        $start_date = date('2023/02/01'.' 12:00:00');
         $user = Session::get('auth');
         $id = $user->id;
         $code = 'temp;'.$user->section;
@@ -1073,6 +1078,8 @@ class DocumentController extends Controller
                     ->orwhere('code',$code);
             })
             ->where('tracking_details.status',0)
+            ->where('tracking_details.date_in','>=',$start_date)
+            ->where('tracking_details.date_in','<=',$end_date)
             ->orderBy('tracking_details.id','desc')
             ->get();
 

@@ -85,8 +85,6 @@ return [
             'database' => 'procurement',
             'username' => 'admin',
             'password' => '1-2-3-4',
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
             'prefix' => '',
             'strict' => false,
             'engine' => null,

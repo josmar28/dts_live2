@@ -27,7 +27,7 @@
     <div class="login-box">
       <div class="login-logo">
           <img src="{{ asset('public/img/doh.png') }}" style="width: 70px; height: 70px;" />
-           <img src="{{ asset('public/img/dohro12logo_100RES.png') }}" style="width: 70px; height: 70px;" />
+           <img src="{{ asset('public/img/dohro12logo.png') }}" style="width: 70px; height: 70px;" />
           <br />
           <a href="#" style="font-weight:bolder;"><label style="font-size: 17pt;">DOH-CHD XII DTS 5.0</label></a>
 

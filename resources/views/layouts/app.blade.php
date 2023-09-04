@@ -37,20 +37,20 @@ $pending = \App\Tracking_Details::select(
         // $end_date = Carbon::parse($end)->endOfDay();
         $start_date = date('2023/02/01'.' 12:00:00');
       
-        $incident =  DB::table('tracking_releasev2')
-        ->select('tracking_releasev2.*','chd12_incidentreport.*','chd12_incidenttype.incident_type','tracking_master.description','t2.date_in')
-        ->leftJoin('chd12_incidentreport', 'chd12_incidentreport.releasev2mainid', '=', 'tracking_releasev2.id')
-        ->leftJoin(\DB::raw('(SELECT route_no, max(id) as maxid, max(date_in) as date_in FROM tracking_details A group by route_no) AS t2'), function($join) {
-            $join->on('tracking_releasev2.route_no', '=', 't2.route_no');
-        })
-        ->leftJoin('chd12_incidenttype', 'chd12_incidenttype.inctypeid', '=', 'chd12_incidentreport.incident_typeid')
-        ->leftJoin('tracking_master', 'tracking_master.route_no', '=', 'tracking_releasev2.route_no')
-        ->where('tracking_releasev2.status','report') 
-        ->where('chd12_incidentreport.incident_typeid',null) 
-        ->where('tracking_releasev2.released_section_to',$user->section)
-        ->where('t2.date_in','>=',$start_date)
-        ->where('t2.date_in','<=',$end_date)
-        ->count();
+        // $incident =  DB::table('tracking_releasev2')
+        // ->select('tracking_releasev2.*','chd12_incidentreport.*','chd12_incidenttype.incident_type','tracking_master.description','t2.date_in')
+        // ->leftJoin('chd12_incidentreport', 'chd12_incidentreport.releasev2mainid', '=', 'tracking_releasev2.id')
+        // ->leftJoin(\DB::raw('(SELECT route_no, max(id) as maxid, max(date_in) as date_in FROM tracking_details A group by route_no) AS t2'), function($join) {
+        //     $join->on('tracking_releasev2.route_no', '=', 't2.route_no');
+        // })
+        // ->leftJoin('chd12_incidenttype', 'chd12_incidenttype.inctypeid', '=', 'chd12_incidentreport.incident_typeid')
+        // ->leftJoin('tracking_master', 'tracking_master.route_no', '=', 'tracking_releasev2.route_no')
+        // ->where('tracking_releasev2.status','report') 
+        // ->where('chd12_incidentreport.incident_typeid',null) 
+        // ->where('tracking_releasev2.released_section_to',$user->section)
+        // ->where('t2.date_in','>=',$start_date)
+        // ->where('t2.date_in','<=',$end_date)
+        // ->count();
 
 ?>
 
@@ -171,10 +171,7 @@ $pending = \App\Tracking_Details::select(
                         @if($pending > 0)
                             <span class="badge" style="background:#eb9316;">{{ $pending }}</span>
                         @endif
-                        @if($incident > 0)
-                        <span class="badge" style="background:#eb9316;">{{ $incident }}</span>
-                        @endif
-                        <span class="caret"></span>
+                   
                     </a>
                     <ul class="dropdown-menu">
                         @if($pending > 0)
@@ -183,11 +180,6 @@ $pending = \App\Tracking_Details::select(
                             <li><a href="{{ asset('document/pending') }}"><i class="fa fa-hourglass-1"></i> Pending Document </a></li>
                         @endif
                         
-                        @if($incident > 0)
-                            <li style="background:#eb9316;"><a href="{{ asset('document/pending/incident') }}"><i class="fa fa-warning"></i> Pending Incident</a></li>
-                        @else
-                            <li><a href="{{ asset('document/pending/incident') }}"><i class="fa fa-hourglass-1"></i> Pending Incident</a></li>
-                        @endif
                         <li class=""><a href="{{ asset('document/accept')  }}"><i class="fa fa-plus"></i> Accept Document</a></li>
                        <li class=""><a href="{{ asset('document/release')  }}"><i class="fa fa-plus"></i> Release Document</a></li>
                         <li class="divider"></li>
@@ -341,11 +333,7 @@ $incoming = Tracking_Details::select(
         ->orderBy('tracking_details.date_in','desc')
         ->get();
 ?>
-@if($incident > 0)
-<script>
-    // $('#penModal').modal('show');
-</script>
-@endif
+
 @if(count($incoming) > 0)
 <script>
     $('#notification').modal('show');

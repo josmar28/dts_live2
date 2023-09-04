@@ -331,7 +331,7 @@ class CHD12ReportController extends Controller
     }
 
     public function saveRelease(Request $req){
-        for($l=0;$l<10;$l++){
+        for($l=0;$l<15;$l++){
             if(!$req->route_no[$l])
             {
                 continue;
@@ -360,7 +360,7 @@ class CHD12ReportController extends Controller
 
           }
             
-            for($i=0;$i<10;$i++){
+            for($i=0;$i<15;$i++){
                 if(!$req->route_no[$i])
                 {
                     continue;
@@ -608,13 +608,13 @@ class CHD12ReportController extends Controller
                     ->where('tracking_details.delivered_by',$user->id)
                     ->where('tracking_details.status',0)
                     ->orderBy('tracking_details.date_in','desc')
-                    ->whereNotExists(function($query)use($user_id)
-                                {
-                                    $query->select(DB::raw(1))
-                                        ->from('transmittal_data')
-                                        ->where('transmittal_data.released_by',$user_id)
-                                        ->whereRaw('tracking_details.route_no = transmittal_data.route_no');
-                                })  
+                    // ->whereNotExists(function($query)use($user_id)
+                    //             {
+                    //                 $query->select(DB::raw(1))
+                    //                     ->from('transmittal_data')
+                    //                     ->where('transmittal_data.released_by',$user_id)
+                    //                     ->whereRaw('tracking_details.route_no = transmittal_data.route_no');
+                    //             })  
                     ->get();
             }
             // }

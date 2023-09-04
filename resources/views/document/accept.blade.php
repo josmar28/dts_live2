@@ -56,7 +56,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                @for($i=0;$i<10;$i++)
+                @for($i=0;$i<15;$i++)
                     <tr>
                         <td>
                             {{ Session::get('auth')->fname }} {{ Session::get('auth')->lname }}
@@ -65,19 +65,21 @@
                             {{ date('M d, Y h:i:s A') }}
                         </td>
                         <td>
-                        <!-- <input list="route_no" name="route_no[]" class="form-control" id="<?php echo "id".$i; ?>"  onkeyup ="clickYou()">
+                        @if(Session::get('auth')->section == 113)
+                        <input list="route_no" name="route_no[]" class="form-control" id="<?php echo "id".$i; ?>"  onkeyup ="clickYou()">
                         <datalist id = "route_no">
                             @foreach($data as $dataa)
                                 <option value="{{ $dataa->route_no }}" >{{ $dataa->route_no }}</option>
                             @endforeach
-                        </datalist> -->
-
+                        </datalist>
+                        @else
                             <select name="route_no[]" id="<?php echo "id".$i; ?>" class="chosen-select" onkeyup ="clickYou()">
                                 <option value="">Select code...</option>
                                 @foreach($data as $dataa)
                                     <option value="{{ $dataa->route_no }}" >{{ $dataa->route_no }}</option>
                                 @endforeach
                             </select>
+                        @endif
                         </td>
                         <td>
                             <input type="text" id="<?php echo "sec".$i; ?>" onchange ="clickYou()" name="remarks[]" class="form-control remarks" disabled placeholder="Enter remarks">
@@ -126,7 +128,7 @@ function clickYou(){
     var count = 0;
     var vals2="";
 
-    for(var i=0;i<10;i++){
+    for(var i=0;i<15;i++){
         var id2 = "id"+i;
         var val2 = document.getElementById(id2).value;
         var secid = "sec"+i;

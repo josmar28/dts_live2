@@ -70,7 +70,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                @for($i=0;$i<10;$i++)
+                @for($i=0;$i<15;$i++)
                     <tr>
                         <td>
                             {{ Session::get('auth')->fname }} {{ Session::get('auth')->lname }}
@@ -161,7 +161,7 @@ function clickYou(){
             var count = 0;
             var vals2="";
 
-            for(var i=0;i<10;i++){
+            for(var i=0;i<15;i++){
 				var id2 = "id"+i;
                 var val2 = document.getElementById(id2).value;
                 var secid = "sec"+i;
