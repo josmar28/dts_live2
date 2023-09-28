@@ -259,8 +259,9 @@ $('.pr_no').on('change', function() {
              $('.loading').hide();
             if(result == 1 )
             {
-                alert('PR number is already exist! Try another one');
-                $('.pr_no').val("") 
+                // alert('PR number is already exist! Try another one');
+                // $('.pr_no').val("") 
+                console.log('not ok');
 
             }
             else

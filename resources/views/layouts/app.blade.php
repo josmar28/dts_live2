@@ -489,7 +489,7 @@ $incoming = Tracking_Details::select(
             Lobibox.notify('success', {
                 title: "New Incoming Document" ,
                 msg: "From "+ data['section_released_by'] +" || Released by " + data['released_by'] + "<br> Route Number: " +  data['route_no'],
-                img: "{{ url('public/img/dohro12logo_100RES.png') }}",
+                img: "{{ url('public/img/dohro12logo.png') }}",
                 width: 450,
                 sound:true,
                 delay: false
