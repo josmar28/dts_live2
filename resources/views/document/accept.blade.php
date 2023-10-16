@@ -65,7 +65,7 @@
                             {{ date('M d, Y h:i:s A') }}
                         </td>
                         <td>
-                        @if(Session::get('auth')->section == 113)
+                        @if(Session::get('auth')->section == 113 || Session::get('auth')->section == 99)
                         <input list="route_no" name="route_no[]" class="form-control" id="<?php echo "id".$i; ?>"  onkeyup ="clickYou()">
                         <datalist id = "route_no">
                             @foreach($data as $dataa)

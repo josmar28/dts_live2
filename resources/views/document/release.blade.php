@@ -79,7 +79,7 @@
                             {{ date('M d, Y h:i:s A') }}
                         </td>
                         <td>
-                            @if( Session::get('auth')->section == 90 || Session::get('auth')->section == 83 || Session::get('auth')->section == 99)
+                            @if( Session::get('auth')->section == 90 || Session::get('auth')->section == 83)
                             <select name="route_no[]" id="<?php echo "id".$i; ?>" class="chosen-select" onkeyup ="clickYou()">
                                     <option value="">Select code...</option>
                                     @foreach($data as $dataa)
