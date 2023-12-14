@@ -349,7 +349,7 @@ class DocumentController extends Controller
         {
             $tmp = $req->description;
             $tmp .= '<br><br>';
-            $tmp .= 'PR # : '.$req->pr_no.' dtd '. date('M d, Y',strtotime($req->pr_date));
+            $tmp .= 'PR # / BARCODE : '.$req->pr_no.' dtd '. date('M d, Y',strtotime($req->pr_date));
             $tmp .= '<br><br>';
             $tmp .= 'PO # : '.$req->po_no.' dtd '. date('M d, Y',strtotime($req->po_date));
             $q->description = $tmp;

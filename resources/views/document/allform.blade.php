@@ -93,7 +93,7 @@ $filter = Doc::isIncluded($doc_type);
                 $barcode = array();
             ?>
                 <tr>
-                    <td class="text-right">BARCODE :</td>
+                    <td class="text-right">PR # / BARCODE :</td>
                     <td>
                         <!-- <input type="text" name="pr_no" class="form-control" required/> -->
                         <input list="pr_no" name="pr_no" class="form-control pr_no" required>
