@@ -88,11 +88,13 @@
                 success: function(result){
                  if(result.status == 'report')
                  {
-                     alert('Document is reported, Please fill out Indicent Log');
+                    alert('Document is reported, Please fill out Indicent Log');
                     <?php echo 'var url3 ="'.asset('chd12report/incident').'";';?>
                     $('.track_history1').html(loadingState);
                     var route_no2 = result.route_no;
-                    $('#incident').data('id',id).data('route',route_no).modal('show');
+                    // $('#incident').data('id',id).data('route',route_no).modal('show');
+                    $('#incident').data('id',id).data('route',route_no).modal({backdrop: 'static', keyboard: false});
+                    $("#relnewid").val(result.id);
                     $("#relnewid").val(result.id);
                     $('#track_route_no1').val('Loading...');
                     setTimeout(function(){
@@ -112,10 +114,10 @@
                                     remarks:remarks,
                                     _token: _token
                                 },
-                                success: function(results){
+                                success: function(results) {
                                     $('textarea#inci_subject').val(results.action);
                                     $('.track_history1').html(data);
-                                  $('.btn-cancel').prop('disabled', true);
+                                    $('.btn-cancel').prop('disabled', true);
                                 }
                               });
                                 }

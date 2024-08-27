@@ -11,6 +11,7 @@ class Tracking_Filter extends Model
     protected $fillable = [
         'doc_type',
         'doc_description',
-        'description'
+        'description',
+        'service_type',
     ];
 }

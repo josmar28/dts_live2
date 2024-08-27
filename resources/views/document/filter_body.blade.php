@@ -13,6 +13,19 @@
         <label>Document Description:</label>
         <input type="text" class="form-control" value="@if(isset($data->doc_description)){{ $data->doc_description }}@endif" name="doc_description">
     </div>
+
+    <!-- <div class="form-group">
+        <label>Service Type:</label>
+        <select id="service_type" name="service_type" class="form-control chosen-select" required>
+           <option  value="">Select Service Type</option>
+           <?php
+            $services = App\Service::all();
+           ?>
+             @foreach($services as $row)
+          <option  @if($data){{ ($data->service_type == $row->id ? 'selected' : '') }}@endif value="{{ $row->id }}"> {{ $row->description }}</option>
+              @endforeach
+         </select>
+    </div> -->
  
     <div class="modal-footer">
         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
@@ -26,6 +39,7 @@
 </form>
 
 <script>
+    $('.chosen-select').chosen();
     $(".select2").select2({ width: '100%' });
 
     $('.select_province').on('change',function(){

@@ -63,8 +63,12 @@ class CHD12ReportController extends Controller
         }              
         $chd12_report = DB::connection('mysql')->select("CALL chd12_report('$year', '$month')");
         //print_r($chd12_report);
+        // dd($chd12_report);
         return view('report.chd12report')
         ->with(compact('chd12_report'));
+
+
+      
     }
     public function search(Request $request)
     {
@@ -74,24 +78,26 @@ class CHD12ReportController extends Controller
         Session::put('month_session',$month);
         $chd12_report = DB::connection('mysql')->select("CALL chd12_report('$year', '$month')");
         //print_r($chd12_report);
+        // dd($chd12_report);
         return view('report.chd12report')
         ->with(compact('chd12_report'));
 
     }
 
-    public function incidentLogs(Request $req){
+    public function incidentLogs(Request $req)
+    {
 
         if($req->daterange)
         {
             $str = $req->daterange;
-            $temp1 = explode('-',$str);
+            $temp1 = explode(' - ',$str);
             $temp2 = array_slice($temp1, 0, 1);
             $temp3 = array_slice($temp1, 1, 1);
         }
         else
         { 
-            $end_date = date('m/d/Y'.' 12:59:59');
-            $start_date = date('m/d/Y'.' 12:00:00', strtotime ( '-2 month')) ;
+            $end_date = date('m/d/Y');
+            $start_date = date('m/d/Y', strtotime ( '-2 month')) ;
             $str = $start_date.' - '.$end_date;
 
             $temp1 = explode('-',$str);
@@ -136,39 +142,41 @@ class CHD12ReportController extends Controller
             ->where('chd12_incidentreport.dateencoded','>=',$startdate)
             ->where('chd12_incidentreport.dateencoded','<=',$enddate)
             ->paginate(10);
-        }else
+        }
+            else
         {
-        $data = DB::table('tracking_releasev2')
-        ->select('tracking_releasev2.*','chd12_incidentreport.*','chd12_incidenttype.incident_type','tracking_master.description','t2.date_in')
-        ->leftJoin('chd12_incidentreport', 'chd12_incidentreport.releasev2mainid', '=', 'tracking_releasev2.id')
-        ->leftJoin(\DB::raw('(SELECT route_no, max(id) as maxid, max(date_in) as date_in FROM tracking_details A group by route_no) AS t2'), function($join) {
-            $join->on('tracking_releasev2.route_no', '=', 't2.route_no');
-        })
-        ->leftJoin('chd12_incidenttype', 'chd12_incidenttype.inctypeid', '=', 'chd12_incidentreport.incident_typeid')
-        ->leftJoin('tracking_master', 'tracking_master.route_no', '=', 'tracking_releasev2.route_no')
-        ->where('tracking_releasev2.status','report')  
-        ->whereNotNull('chd12_incidenttype.incident_type')
-        ->where('tracking_releasev2.released_section_to',$user->section)
-        ->where(function($q) use ($keyword){
-                $q->where('chd12_incidenttype.incident_type','like',"%$keyword%")
-                    ->orwhere('chd12_incidentreport.reason','like',"%$keyword%")
-                    ->orWhere('tracking_releasev2.route_no','like',"%$keyword%")
-                    ->orWhere('tracking_master.description','like',"%$keyword%");
-                             })
-        ->orderBy('t2.maxid','desc')
-        ->where('chd12_incidentreport.dateencoded','>=',$startdate)
-        ->where('chd12_incidentreport.dateencoded','<=',$enddate)
-        ->paginate(10);
+            $data = DB::table('tracking_releasev2')
+            ->select('tracking_releasev2.*','chd12_incidentreport.*','chd12_incidenttype.incident_type','tracking_master.description','t2.date_in')
+            ->leftJoin('chd12_incidentreport', 'chd12_incidentreport.releasev2mainid', '=', 'tracking_releasev2.id')
+            ->leftJoin(\DB::raw('(SELECT route_no, max(id) as maxid, max(date_in) as date_in FROM tracking_details A group by route_no) AS t2'), function($join) {
+                $join->on('tracking_releasev2.route_no', '=', 't2.route_no');
+            })
+            ->leftJoin('chd12_incidenttype', 'chd12_incidenttype.inctypeid', '=', 'chd12_incidentreport.incident_typeid')
+            ->leftJoin('tracking_master', 'tracking_master.route_no', '=', 'tracking_releasev2.route_no')
+            ->where('tracking_releasev2.status','report')  
+            ->whereNotNull('chd12_incidenttype.incident_type')
+            ->where('tracking_releasev2.released_section_to',$user->section)
+            ->where(function($q) use ($keyword){
+                    $q->where('chd12_incidenttype.incident_type','like',"%$keyword%")
+                        ->orwhere('chd12_incidentreport.reason','like',"%$keyword%")
+                        ->orWhere('tracking_releasev2.route_no','like',"%$keyword%")
+                        ->orWhere('tracking_master.description','like',"%$keyword%");
+                                })
+            ->orderBy('t2.maxid','desc')
+            ->where('chd12_incidentreport.dateencoded','>=',$startdate)
+            ->where('chd12_incidentreport.dateencoded','<=',$enddate)
+            ->paginate(10);
          }
 
-   return view('document.incident',[
-       'data' => $data,
-       'daterange' => $str
-   ]);
+        return view('document.incident',[
+            'data' => $data,
+            'daterange' => $str
+        ]);
        
     }
 
-    public function incident($id){
+    public function incident($id)
+    {
         Session::put('addid',$id);
       $type = chd12_incidenttype::all();
 
@@ -176,7 +184,8 @@ class CHD12ReportController extends Controller
      ->with(compact('type'));
     }
 
-    public function transIncident(){
+    public function transIncident()
+    {
       $type = chd12_incidenttype::all();
 
      return view('document.translogincident')
@@ -248,7 +257,8 @@ class CHD12ReportController extends Controller
         ]);
     }
 
-    public function addIncident(Request $req){
+    public function addIncident(Request $req)
+    {
         if($req->relnewid)
         {
         $userid = Session::get('auth')->id;
@@ -285,7 +295,8 @@ class CHD12ReportController extends Controller
         }
     }
 
-    public function editIncident($id){
+    public function editIncident($id)
+    {
         Session::put('id',$id);
         $userid = Session::get('auth')->id;
         $date = date('Y-m-d H:i:s');
@@ -294,7 +305,8 @@ class CHD12ReportController extends Controller
       ->with(compact('data'));
 
     }
-    public function insertEdit(Request $req){
+    public function insertEdit(Request $req)
+    {
         $userid = Session::get('auth')->id;
         $addid = Session::get('addid');
         $date = date('Y-m-d H:i:s');
@@ -307,7 +319,8 @@ class CHD12ReportController extends Controller
         return redirect('chd12report/incident');
     }
 
-    public function release(){
+    public function release()
+    {
         $user = Session::get('auth');
         $code2 = 'accept;'.$user->section;
         $code3 = 'return;'.$user->section;
@@ -852,9 +865,11 @@ class CHD12ReportController extends Controller
 
     public function filterOptions(Request $req)
     {
+ 
         $data = array(
                'doc_type' => $req->doc_type,
                'doc_description' => $req->doc_description,
+            //    'service_type' => $req->service_type,
                'description' => 1
         );
 

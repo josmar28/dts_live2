@@ -46,44 +46,27 @@ if(Session::get('auth')->user_priv==1)
     $totalCycleend += $ce['first'];
     $totalOngoing += $on['first'];
 
-}
-else{
-    $accepted = Admin::countAccepted($section);
-    $created = Admin::countCreated($section);
-    $cycleend = Admin::countCycleEnd($section);
-    $ongoing = Admin::countOngoing($section);
-
-    $totalAccepted += $accepted;
-    $totalCreated += $created;
-    $totalCycleend += $cycleend;
-    $totalOngoing += $ongoing;
-
-    $cyper =  $cycleend == 0 ? 0 : ($cycleend / $created)* 100;
+    // $cyper =  $cycleend == 0 ? 0 : ($cycleend / $created)* 100;
                     
-$cyper_val = number_format($cyper, 2);
+    // $cyper_val = number_format($cyper, 2);
 
-$onper =  $ongoing == 0 ? 0 : ($ongoing / $created)* 100;
+    // $onper =  $ongoing == 0 ? 0 : ($ongoing / $created)* 100;
 
-$onper_val = number_format($onper, 2);
+    // $onper_val = number_format($onper, 2);
+
+
+    $totalcypher = number_format($totalCycleend == 0 ? 0 : ($totalCycleend / $totalCreated) * 100,2);
+    $totalonper = number_format($totalOngoing == 0 ? 0 : ($totalOngoing / $totalCreated) * 100,2);
+
+    $newyear  = date("Y");
+    $month = date("n");
+    //Calculate the year quarter.
+    $quarter = ceil($month / 3);
+
 }
 
 
-// $cyper =  $cycleend == 0 ? 0 : ($cycleend / $created)* 100;
-                    
-// $cyper_val = number_format($cyper, 2);
 
-// $onper =  $ongoing == 0 ? 0 : ($ongoing / $created)* 100;
-
-// $onper_val = number_format($onper, 2);
-
-
-$totalcypher = number_format($totalCycleend == 0 ? 0 : ($totalCycleend / $totalCreated) * 100,2);
-$totalonper = number_format($totalOngoing == 0 ? 0 : ($totalOngoing / $totalCreated) * 100,2);
-
-$newyear  = date("Y");
-$month = date("n");
-//Calculate the year quarter.
-$quarter = ceil($month / 3);
 ?>
 <div class="col-md-9 wrapper">
 
@@ -465,81 +448,8 @@ $quarter = ceil($month / 3);
                     </div>
                 </div>
             </div>
-        @else
-      <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{$created}}</h3>
-                <p>&nbsp; </p>
-
-                <p>Created</p>
-              </div>
-              <div class="icon">
-                <i class="fa fa-plus-circle" style="margin-top:10px;" ></i> 
-              </div>
-              <a href="#" class="small-box-footer"> </a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-
-                <h3>{{$accepted}}</h3>
-                <p>&nbsp; </p>
-
-                <p>Accepted</p>
-              </div>
-              <div class="icon small">
-              <i class="fa fa-check-square" style="margin-top:10px"></i> 
-              </div>
-              <a href="#" class="small-box-footer"> </a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>{{$cycleend}}</h3>
-                <p>({{$cyper_val}}% Done)</p>
-
-                <p>Total Cycle Ended</p>
-              </div>
-              <div class="icon">
-              <i class="fa fa-ban" style="margin-top:10px"> </i> 
-              </div>
-              <a href="#" class="small-box-footer"> </a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <a href="{{ asset('documents/report/ongoinghome/'.$section)}}" target="_blank">
-                    <h3>{{$ongoing}} </h3>
-                    <p>({{$onper_val}}%)</p>
-                                        </a>
-
-                    <p>Ongoing</p>
-                </div>
-              <div class="icon">
-              <i class="fa fa-arrow-right" style="margin-top:10px"></i> 
-              </div>
-              <a href="#" class="small-box-footer"> </a>
-            </div>
-          </div>
-          <!-- ./col -->
-          
-        </div>
-    </div>
-@endif
+   
+    @endif
 
     <div class="alert alert-jim">
         <h3 class="page-header">Created

@@ -12,7 +12,7 @@ if(!Session::get('is_login')){
 
 $end_date = date('Y/m/d'.' 12:59:59');
 // $start_date = date('Y/m/d'.' 12:00:00', strtotime ( '-1 month'));
-$start_date1 = date('2023/01/01'.' 12:00:00');
+$start_date1 = date('2024/01/01'.' 00:00:00');
 
 $user = Session::get('auth');
 $code = 'temp;'.$user->section;
@@ -29,28 +29,8 @@ $pending = \App\Tracking_Details::select(
         ->where('code',$code)
         ->where('status',0)
         ->count();
-        
-        // $start = Carbon::now()->startOfYear()->format('m/d/Y');
-        // $end = Carbon::now()->endOfYear()->format('m/d/Y');
- 
-        // $start_date = Carbon::parse($start)->startOfDay();
-        // $end_date = Carbon::parse($end)->endOfDay();
-        $start_date = date('2023/02/01'.' 12:00:00');
-      
-        // $incident =  DB::table('tracking_releasev2')
-        // ->select('tracking_releasev2.*','chd12_incidentreport.*','chd12_incidenttype.incident_type','tracking_master.description','t2.date_in')
-        // ->leftJoin('chd12_incidentreport', 'chd12_incidentreport.releasev2mainid', '=', 'tracking_releasev2.id')
-        // ->leftJoin(\DB::raw('(SELECT route_no, max(id) as maxid, max(date_in) as date_in FROM tracking_details A group by route_no) AS t2'), function($join) {
-        //     $join->on('tracking_releasev2.route_no', '=', 't2.route_no');
-        // })
-        // ->leftJoin('chd12_incidenttype', 'chd12_incidenttype.inctypeid', '=', 'chd12_incidentreport.incident_typeid')
-        // ->leftJoin('tracking_master', 'tracking_master.route_no', '=', 'tracking_releasev2.route_no')
-        // ->where('tracking_releasev2.status','report') 
-        // ->where('chd12_incidentreport.incident_typeid',null) 
-        // ->where('tracking_releasev2.released_section_to',$user->section)
-        // ->where('t2.date_in','>=',$start_date)
-        // ->where('t2.date_in','<=',$end_date)
-        // ->count();
+    
+        $start_date = date('2024/02/01'.' 00:00:00');
 
 ?>
 
@@ -186,7 +166,7 @@ $pending = \App\Tracking_Details::select(
                         <li class=""><a href="{{ asset('document/transmittal')  }}"><i class="fa fa-plus"></i> Transmittal</a></li>
                         <li><a href="{{ asset('document') }}"><i class="fa fa-file"></i> My Documents</a></li>
                         <li><a href="{{ asset('chd12report/secDuration') }}"><i class="fa fa-bar-chart"></i> Document Duration Report</a></li>
-                        @if( (Session::get('auth')->user_priv==1 || Session::get('auth')->username=='2002000972') || (Session::get('auth')->section == 82 || Session::get('auth')->section == 100) )
+                        @if( (Session::get('auth')->user_priv==1 || Session::get('auth')->username=='2002000972') || (Session::get('auth')->section == 82 || Session::get('auth')->section == 100) || (Session::get('auth')->section == 83 || Session::get('auth')->section == 91) )
                         <li><a href="{{ asset('document/list') }}"><i class="fa fa-file"></i> All Documents</a></li>
                         @endif
                     </ul>
@@ -230,6 +210,7 @@ $pending = \App\Tracking_Details::select(
                             <li class="divider"></li>
                             <li><a href="{{ asset('document/duration') }}"><i class="fa fa-file"></i> All Duration</a></li>
                             <li><a href="{{ asset('document/filter') }}"><i class="fa fa-filter"></i> Filter Documents</a></li>
+                            <li><a href="{{ asset('document/services') }}"><i class="fa fa-file"></i> Type of Services</a></li>
                             <li><a href="{{ asset('users/feedback') }}"><i class="fa fa-bullhorn"></i> User Feedbacks <span class="badge">{{ \App\Feedback::where('is_read','0')->count() }}</span></a></li>
                         </ul>
                     </li>
@@ -294,6 +275,7 @@ $pending = \App\Tracking_Details::select(
 <script src="{{ asset('resources/assets/js/jquery.min.js') }}"></script>
 <script src="{{ asset('resources/assets/js/jquery-validate.js') }}"></script>
 <script src="{{ asset('resources/assets/js/bootstrap.min.js') }}"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script> 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="{{ asset('resources/assets/js/ie10-viewport-bug-workaround.js') }}"></script>
 <script>var loadingState = '<center><img src="{{ asset('resources/img/spin.gif') }}" width="150" style="padding:20px;"></center>'; </script>
@@ -313,7 +295,7 @@ $pending = \App\Tracking_Details::select(
 <script src="{{ asset('resources/plugin_old/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
 <script src="{{ asset('resources/plugin_old/Lobibox/Lobibox.js') }}"></script>
 
-<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 @yield('plugin_old')
 <?php
 use App\Tracking_Details;
@@ -478,8 +460,13 @@ $incoming = Tracking_Details::select(
 
 
     var section_id = "{{Session::get('auth')->section}}";
-    var pusher = new Pusher('026dbd5bc727f8fbcf24', {
+    var pusher = new Pusher('ca784ea1e23d5dfa17df', {
       cluster: 'ap1'
+    });
+
+    var channel1 = pusher.subscribe('my-channel');
+    channel1.bind('my-event', function(data) {
+      alert(JSON.stringify(data));
     });
    
     var channel = pusher.subscribe('document_channel');

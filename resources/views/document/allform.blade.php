@@ -27,17 +27,19 @@ $filter = Doc::isIncluded($doc_type);
               <tr>
                 <td class="text-right col-lg-4">Document Type :</td>
                 <td class="col-lg-8">
-        <select id="doc_type" name="doc_type" class="form-control" required>
+        <select id="doc_type" name="doc_type" class="form-control chosen-select" required>
             <option value="">Select Document Type</option>
             <?php
-                $doc_types = App\Tracking_Filter::where('doc_type', '!=' , 'GENERAL')
-                ->where('doc_type', '!=' , 'PRC')
-                ->where('doc_type', '!=' , 'PRR_M')
-                ->orderby('doc_description','asc')
-                ->get();
+                  $doc_types = App\Tracking_Filter::select('tracking_filter.*','services.description as service_description')
+                  ->where('tracking_filter.doc_type', '!=' , 'GENERAL')
+                  ->leftJoin('services', 'tracking_filter.service_type', '=', 'services.id')
+                  ->where('tracking_filter.doc_type', '!=' , 'PRC')
+                  ->where('tracking_filter.doc_type', '!=' , 'PRR_M')
+                  ->orderby('tracking_filter.doc_description','asc')
+                  ->get();
             ?>
              @foreach($doc_types as $row)
-                <option {{ ($doc_type == $row->doc_type ? 'selected' : '') }} value="{{ $row->doc_type }}"> {{ $row->doc_description }}</option>
+                <option {{ ($doc_type == $row->doc_type ? 'selected' : '') }} value="{{ $row->doc_type }}"> {{ $row->doc_description }} {{ $row->service_description }}</option>
               @endforeach
          </select>
                 </td>
@@ -248,6 +250,7 @@ $filter = Doc::isIncluded($doc_type);
 </form>
 @section('plugin_old')
 <script>
+$('.chosen-select').chosen();
 $('.pr_no').on('change', function() {
     $('.loading').show();
     <?php echo 'var url ="'.asset('check/PRno').'";';?>

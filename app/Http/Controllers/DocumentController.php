@@ -18,6 +18,7 @@ use App\Http\Controllers\SystemController as System;
 use App\Http\Controllers\ReleaseController as Rel;
 use App\Release;
 use PDO;
+use App\Calendar;
 use DateTime;
 use App\SoLogs;
 
@@ -393,8 +394,19 @@ class DocumentController extends Controller
     {
         $doc = Tracking::where('route_no',$route_no)->first();
 
-        $desc = Tracking_Filter::where('doc_type',$doc->doc_type)->pluck('doc_description')->first();
-        return $desc;
+        $desc = Tracking_Filter::select(DB::raw('CONCAT(tracking_filter.doc_description," ",services.description) as description'))
+        ->leftJoin('services', 'tracking_filter.service_type', '=', 'services.id')
+        ->where('doc_type',$doc->doc_type)
+        ->first();
+
+        if($desc->description != '') 
+        {
+            return $desc->description;
+        }else
+        {
+            $desc = Tracking_Filter::where('doc_type',$doc->doc_type)->pluck('doc_description')->first();
+            return $desc;
+        }
     }
 
     public static function getDocDesc2 ($doc_type)
@@ -617,6 +629,10 @@ class DocumentController extends Controller
             return "Request Form - Website Access";
         case "EVAL_FORM" :
             return "Evaluation Form";
+        case "LTO" :
+            return "LTO";
+        case "PTC" :
+            return "PTC";
          case "ALL" :
             return "All Documents";
          default:
@@ -721,7 +737,7 @@ class DocumentController extends Controller
         $incomingPage = 1;
         $outgoingPage = 1;
         $unconfirmPage = 1;
-        $start_date = date('2023/01/01'.' 12:00:00');
+        $start_date = date('2024/01/01'.' 00:00:00');
         // if($request->page){
         //     switch (explode('type=',$request->page)[1]){
         //         case 'incoming':
@@ -1065,7 +1081,7 @@ class DocumentController extends Controller
     public static function countPendingDocuments()
     {
         $end_date = date('Y/m/d'.' 12:59:59');
-        $start_date = date('2023/02/01'.' 12:00:00');
+        $start_date = date('2024/02/01'.' 00:00:00');
         $user = Session::get('auth');
         $id = $user->id;
         $code = 'temp;'.$user->section;
@@ -1175,36 +1191,170 @@ class DocumentController extends Controller
         return $result;
 
     }
-    public static function duration($start_date)
+
+    static function duration($start_date,$end_date=null)
     {
-        $end_date=date('Y-m-d H:i:s');
+        if(!$end_date){
+            $end_date = date('Y-m-d H:i:s');
+        }
+        $now = new DateTime();
+        $initialDate =  $start_date;    //start date and time in YMD format
+        $finalDate = $end_date;    //end date and time in YMD format
+        $calendar_start = date('m/d/Y',strtotime($initialDate));
+        $calendar_end = date('m/d/Y',strtotime($finalDate));
+        $holidays = Calendar::where('start','>=',$calendar_start)->where('end','<=',$calendar_end)->where('status','=',1)->get(['start']);
 
-        $start_time = strtotime($start_date);
-        $end_time = strtotime($end_date);
-        $difference = $end_time - $start_time;
+        // dd($holidays);
+        /*$holidays = array(
+            '2017-10-17','2017-10-16','2018-08-21'
+        );*/   //holidays as array
+        $noofholiday  = sizeof($holidays);     //no of total holidays
+        //create all required date time objects
+        $firstdate = $now::createFromFormat('Y-m-d H:i:s',$initialDate);
+        $lastdate = $now::createFromFormat('Y-m-d H:i:s',$finalDate);
+        if($lastdate > $firstdate)
+        {
+            $first = $firstdate->format('Y-m-d');
+            $first = $now::createFromFormat('Y-m-d H:i:s',$first." 00:00:00" );
+            $last = $lastdate->format('Y-m-d');
+            $last = $now::createFromFormat('Y-m-d H:i:s',$last." 23:59:59" );
+            $workhours = 0;   //working hours
+            $count = 0;
+            for ($i = $first;$i<=$last;$i->modify('+1 day') )
+            {
+                $holiday = false;
+                for($k=0;$k<$noofholiday;$k++)   //excluding holidays
+                {
+                    $tmp = $i->format('Y-m-d');
+                    if($tmp == $holidays[$k]->start)
+                    {
+                        $holiday = true;
+                        break;
+                    }
+                }
+                $day =  $i->format('l');
+                if($day === 'Saturday' || $day === 'Sunday')  //excluding saturday, sunday
+                    $holiday = true;
+                if(!$holiday)
+                {
+                    $count++;
+                    $ii = $i->format('Y-m-d');
+                    $f = $firstdate->format('Y-m-d');
+                    $l = $lastdate->format('Y-m-d');
+                    if($l == $f )
+                    {
+                        $workhours +=Rel::sameday($firstdate,$lastdate);
+                    }
+                    else if( $ii===$f){
+                        $workhours +=Rel::firstday($firstdate);
+                    }
+                    else if ($l ===$ii){
+                        $workhours +=Rel::lastday($lastdate);
+                    }
+                    else {
+                        $workhours +=8;
+                    }
 
-        $seconds = $difference % 60;            //seconds
-        $difference = floor($difference / 60);
+                }
+              
+            }
+            //return $workhours;
+            // dd($workhours);
+            $days = $workhours / 8;
+          
+            $day = floor( $days );
+            $fraction = $days - $day;
+        
+            $hours = ($fraction * 24);
 
-        $min = $difference % 60;              // min
-        $difference = floor($difference / 60);
+            $intpart2 = floor( $hours );
+            $fraction2 = $hours - $intpart2;
 
-        $hours = $difference % 24;  //hours
-        $difference = floor($difference / 24);
+            $minutes = ($fraction2 * 60);
 
-        $days = $difference % 30;  //days
-        $difference = floor($difference / 30);
+            $result = [
+                'days' => number_format($days),
+                'hours' => number_format($hours),
+                'minutes' => number_format($minutes)
+            ];
 
-        $month = $difference % 12;  //month
-        $difference = floor($difference / 12);
+           
+            return $result;
 
-        $tmp = ($days * 24) + ($month * 24 * 30);
-        $hours+=$tmp;
-        return $hours;
+        }else{
+            return 'Just now';
+        }
     }
 
     public function removePending($id)
     {
+        $data = Tracking_Details::where('tracking_details.id',$id)
+        ->leftJoin('tracking_master', 'tracking_details.route_no', '=', 'tracking_master.route_no')
+        ->leftJoin('tracking_filter', 'tracking_filter.doc_type', '=', 'tracking_master.doc_type')
+        ->leftJoin('services', 'services.id', '=', 'tracking_filter.service_type')
+        ->first();
+
+
+        $update = Tracking_Releasev2::where('route_no',$data->route_no)->get();
+
+        $duration = self::duration($data->prepared_date);
+     
+        if($data->days !== null)
+        {
+            if($duration['days'] != 0 && $duration['days'] > $data->days )
+            {
+                //dd('days');
+                foreach($update as $data)
+                {
+                    $data = Tracking_Releasev2::find($data->id)->update(['arta' => 'lapsed']);
+                }
+            }
+            elseif($duration['days'] != 0 && $duration['days'] <= $data->days)
+            {
+               // dd('!days');
+                foreach($update as $data)
+                {
+                    $data = Tracking_Releasev2::find($data->id)->update(['arta' => 'complied']);
+                }
+            }
+            elseif($duration['days'] == 0 && $duration['hours'] > $data->hours){
+                //dd('hours');
+                 foreach($update as $data)
+                {
+                    Tracking_Releasev2::find($data->id)->update(['arta' => 'lapsed']);
+                }
+            }
+            elseif($duration['days'] == 0 && $duration['hours'] <= $data->hours){
+                //dd('!hours');
+                 foreach($update as $data)
+                {
+                    Tracking_Releasev2::find($data->id)->update(['arta' => 'complied']);
+                }
+            }
+            elseif( $duration['hours'] == 0 &&  $duration['minutes'] > $data->minutes)
+            {
+                //dd('minutes');
+                 foreach($update as $data)
+                {
+                    Tracking_Releasev2::find($data->id)->update(['arta' => 'lapsed']);
+                }
+                exit;
+            }
+            elseif( $duration['hours'] == 0 &&  $duration['minutes'] <= $data->minutes)
+            {
+                //dd('!minutes');
+                 foreach($update as $data)
+                {
+                    Tracking_Releasev2::find($data->id)->update(['arta' => 'complied']);
+                }
+                exit;
+            }
+           
+        } else{
+            Session::put('no_timeframe', true);
+        }
+        
+
         Tracking_Details::where('id',$id)
             ->update(['status'=> 1]);
     }

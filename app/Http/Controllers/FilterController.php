@@ -16,7 +16,10 @@ class FilterController extends Controller
     }
 
     public function index(){
-        $documents = Tracking_Filter::all();
+        $documents = Tracking_Filter::select('tracking_filter.*','services.description')
+        ->leftjoin('services','services.id','=','tracking_filter.service_type')
+        ->get();
+        
         return view('document.filter',['documents' => $documents ]);
     }
 

@@ -74,6 +74,7 @@
                         <th class="col-sm-2" style="text-align:center">Created</th>
                         <th class="col-sm-2" style="text-align:center">Accepted</th>
                         <th class="col-sm-2" style="text-align:center">Reported</th>
+                        <th class="col-sm-2" style="text-align:center">Not Reported</th>
                          <th class="col-sm-2" style="text-align:center">Waiting</th>
                          <th class="col-sm-2" style="text-align:center">Cycle Ended</th>
                         <th class="col-sm-2" style="text-align:center">Year</th>
@@ -105,17 +106,23 @@
                         @if($chd -> reported > 0) 
                        <td class="col-sm-2" style="text-align:center"> <a href="{{ asset('documents/report/allreported/'.$chd -> ids.'/'.$year.'/'.$month)}}" target="_blank">{{$chd -> reported}}</a></td>
                        @else
+                     
                        <td class="col-sm-2" style="text-align:center">{{$chd -> reported}}</td>
+                       @endif
+                       @if($chd -> notreported > 0) 
+                       <td class="col-sm-2" style="text-align:center"> <a href="{{ asset('documents/report/allreported/'.$chd -> ids.'/'.$year.'/'.$month)}}" target="_blank">{{$chd -> notreported}}</a></td>
+                       @else
+                       <td class="col-sm-2" style="text-align:center">{{$chd -> notreported}}</td>
                        @endif
                        @if($chd -> waiting > 0) 
                        <td class="col-sm-2" style="text-align:center"> <a href="{{ asset('documents/report/allwaiting/'.$chd -> ids.'/'.$year.'/'.$month)}}" target="_blank">{{$chd -> waiting}}</a></td>
                       @else
                       <td class="col-sm-2" style="text-align:center">{{$chd -> waiting}}</td>
                       @endif
-                      @if($cycleend > 0) 
-                       <td class="col-sm-2" style="text-align:center"> <a href="{{ asset('documents/report/allcycleend/'.$chd -> ids.'/'.$year.'/'.$month)}}" target="_blank">{{$cycleend}}</a></td>
+                      @if($chd->cycleended > 0) 
+                       <td class="col-sm-2" style="text-align:center"> <a href="{{ asset('documents/report/allcycleend/'.$chd -> ids.'/'.$year.'/'.$month)}}" target="_blank">{{$chd->cycleended}}</a></td>
                       @else
-                      <td class="col-sm-2" style="text-align:center">{{$cycleend}}</td>
+                      <td class="col-sm-2" style="text-align:center">{{$chd->cycleended}}</td>
                       @endif
                        <td class="col-sm-2" style="text-align:center"> {{$chd -> years}}</td>
                        <td class="col-sm-2" style="text-align:center"> {{$chd -> months}}</td>

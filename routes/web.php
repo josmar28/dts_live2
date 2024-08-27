@@ -52,6 +52,14 @@ Route::post('document/duration/option', 'CHD12ReportController@durationOptions')
 Route::post('admin/duration/delete', 'CHD12ReportController@durationDelete');
 Route::get('chd12report/transmittal/incident','CHD12ReportController@transIncident');
 
+
+//Type of Services
+Route::get('document/services','ServiceCtrl@index');
+Route::post('submit-add-service','ServiceCtrl@upsertService');
+Route::post('service-type-info','ServiceCtrl@getServiceTypeInfo');
+Route::post('delete-service-type','ServiceCtrl@deleteServiceType');
+
+
 Route::get('document/info/{route}','DocumentController@show');
 Route::get('document/info/{route}/{doc_type}','DocumentController@show');
 Route::get('document/removepending/{id}','DocumentController@removePending');

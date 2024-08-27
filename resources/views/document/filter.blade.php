@@ -15,6 +15,7 @@
                 <tr>
                     <th>Document Type</th>
                     <th>Document Description</th>
+                    <th>Service Type</th>
                     <th>description</th>
                     <th>amount</th>
                     <th>pr_no</th>
@@ -47,6 +48,7 @@
                                        {{ $doc->doc_type }}
                                     </a></td>
                         <td> {{ $doc->doc_description }}</td>
+                        <td> {{ $doc->description }}</td>
                         <td><input data-type="{{ $doc->doc_type }}" type="checkbox" class="update_filter flat-red" data-column="{{ 'description' }}"
                             @if($doc->description==1)
                                 {{ 'checked' }}
@@ -184,7 +186,7 @@
 @endsection
 @section('js')
 <script>
-           $('input.update_filter').click(function(){
+    $('input.update_filter').click(function(){
         if($(this).prop('checked') == true){
             var data = {
                 'column':$(this).data('column'),
